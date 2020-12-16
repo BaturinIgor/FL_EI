@@ -1,0 +1,373 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    AND
+    AS
+    ASSERT
+    BREAK
+    CLASS
+    CON
+    CONTINUE
+    DEF
+    DEL
+    DIS
+    ELIF
+    ELSE
+    EQL
+    EXCEPT
+    FALSE
+    FINALLY
+    FOR
+    FROM
+    GLOBAL
+    ID
+    IF
+    IMPORT
+    IN
+    IS
+    LAMBDA
+    LESS
+    LOE
+    MOE
+    MORE
+    NEG
+    NONE
+    NONLOCAL
+    NOT
+    OR
+    PASS
+    RAISE
+    RETURN
+    TRUE
+    TRY
+    WHILE
+    WITH
+    YIELD
+
+Grammar
+
+Rule 0     S' -> expression
+Rule 1     expression -> expression PLUS term
+Rule 2     expression -> expression SUB term
+Rule 3     expression -> term
+Rule 4     term -> term MULT factor
+Rule 5     term -> term DIV factor
+Rule 6     term -> factor
+Rule 7     factor -> NUM
+Rule 8     term -> term POW factor
+Rule 9     factor -> LBR expression RBR
+
+Terminals, with rules where they appear
+
+AND                  : 
+AS                   : 
+ASSERT               : 
+BREAK                : 
+CLASS                : 
+CON                  : 
+CONTINUE             : 
+DEF                  : 
+DEL                  : 
+DIS                  : 
+DIV                  : 5
+ELIF                 : 
+ELSE                 : 
+EQL                  : 
+EXCEPT               : 
+FALSE                : 
+FINALLY              : 
+FOR                  : 
+FROM                 : 
+GLOBAL               : 
+ID                   : 
+IF                   : 
+IMPORT               : 
+IN                   : 
+IS                   : 
+LAMBDA               : 
+LBR                  : 9
+LESS                 : 
+LOE                  : 
+MOE                  : 
+MORE                 : 
+MULT                 : 4
+NEG                  : 
+NONE                 : 
+NONLOCAL             : 
+NOT                  : 
+NUM                  : 7
+OR                   : 
+PASS                 : 
+PLUS                 : 1
+POW                  : 8
+RAISE                : 
+RBR                  : 9
+RETURN               : 
+SUB                  : 2
+TRUE                 : 
+TRY                  : 
+WHILE                : 
+WITH                 : 
+YIELD                : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+expression           : 1 2 9 0
+factor               : 4 5 6 8
+term                 : 1 2 3 4 5 8
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . expression
+    (1) expression -> . expression PLUS term
+    (2) expression -> . expression SUB term
+    (3) expression -> . term
+    (4) term -> . term MULT factor
+    (5) term -> . term DIV factor
+    (6) term -> . factor
+    (8) term -> . term POW factor
+    (7) factor -> . NUM
+    (9) factor -> . LBR expression RBR
+
+    NUM             shift and go to state 4
+    LBR             shift and go to state 5
+
+    expression                     shift and go to state 1
+    term                           shift and go to state 2
+    factor                         shift and go to state 3
+
+state 1
+
+    (0) S' -> expression .
+    (1) expression -> expression . PLUS term
+    (2) expression -> expression . SUB term
+
+    PLUS            shift and go to state 6
+    SUB             shift and go to state 7
+
+
+state 2
+
+    (3) expression -> term .
+    (4) term -> term . MULT factor
+    (5) term -> term . DIV factor
+    (8) term -> term . POW factor
+
+    PLUS            reduce using rule 3 (expression -> term .)
+    SUB             reduce using rule 3 (expression -> term .)
+    $end            reduce using rule 3 (expression -> term .)
+    RBR             reduce using rule 3 (expression -> term .)
+    MULT            shift and go to state 8
+    DIV             shift and go to state 9
+    POW             shift and go to state 10
+
+
+state 3
+
+    (6) term -> factor .
+
+    MULT            reduce using rule 6 (term -> factor .)
+    DIV             reduce using rule 6 (term -> factor .)
+    POW             reduce using rule 6 (term -> factor .)
+    PLUS            reduce using rule 6 (term -> factor .)
+    SUB             reduce using rule 6 (term -> factor .)
+    $end            reduce using rule 6 (term -> factor .)
+    RBR             reduce using rule 6 (term -> factor .)
+
+
+state 4
+
+    (7) factor -> NUM .
+
+    MULT            reduce using rule 7 (factor -> NUM .)
+    DIV             reduce using rule 7 (factor -> NUM .)
+    POW             reduce using rule 7 (factor -> NUM .)
+    PLUS            reduce using rule 7 (factor -> NUM .)
+    SUB             reduce using rule 7 (factor -> NUM .)
+    $end            reduce using rule 7 (factor -> NUM .)
+    RBR             reduce using rule 7 (factor -> NUM .)
+
+
+state 5
+
+    (9) factor -> LBR . expression RBR
+    (1) expression -> . expression PLUS term
+    (2) expression -> . expression SUB term
+    (3) expression -> . term
+    (4) term -> . term MULT factor
+    (5) term -> . term DIV factor
+    (6) term -> . factor
+    (8) term -> . term POW factor
+    (7) factor -> . NUM
+    (9) factor -> . LBR expression RBR
+
+    NUM             shift and go to state 4
+    LBR             shift and go to state 5
+
+    expression                     shift and go to state 11
+    term                           shift and go to state 2
+    factor                         shift and go to state 3
+
+state 6
+
+    (1) expression -> expression PLUS . term
+    (4) term -> . term MULT factor
+    (5) term -> . term DIV factor
+    (6) term -> . factor
+    (8) term -> . term POW factor
+    (7) factor -> . NUM
+    (9) factor -> . LBR expression RBR
+
+    NUM             shift and go to state 4
+    LBR             shift and go to state 5
+
+    term                           shift and go to state 12
+    factor                         shift and go to state 3
+
+state 7
+
+    (2) expression -> expression SUB . term
+    (4) term -> . term MULT factor
+    (5) term -> . term DIV factor
+    (6) term -> . factor
+    (8) term -> . term POW factor
+    (7) factor -> . NUM
+    (9) factor -> . LBR expression RBR
+
+    NUM             shift and go to state 4
+    LBR             shift and go to state 5
+
+    term                           shift and go to state 13
+    factor                         shift and go to state 3
+
+state 8
+
+    (4) term -> term MULT . factor
+    (7) factor -> . NUM
+    (9) factor -> . LBR expression RBR
+
+    NUM             shift and go to state 4
+    LBR             shift and go to state 5
+
+    factor                         shift and go to state 14
+
+state 9
+
+    (5) term -> term DIV . factor
+    (7) factor -> . NUM
+    (9) factor -> . LBR expression RBR
+
+    NUM             shift and go to state 4
+    LBR             shift and go to state 5
+
+    factor                         shift and go to state 15
+
+state 10
+
+    (8) term -> term POW . factor
+    (7) factor -> . NUM
+    (9) factor -> . LBR expression RBR
+
+    NUM             shift and go to state 4
+    LBR             shift and go to state 5
+
+    factor                         shift and go to state 16
+
+state 11
+
+    (9) factor -> LBR expression . RBR
+    (1) expression -> expression . PLUS term
+    (2) expression -> expression . SUB term
+
+    RBR             shift and go to state 17
+    PLUS            shift and go to state 6
+    SUB             shift and go to state 7
+
+
+state 12
+
+    (1) expression -> expression PLUS term .
+    (4) term -> term . MULT factor
+    (5) term -> term . DIV factor
+    (8) term -> term . POW factor
+
+    PLUS            reduce using rule 1 (expression -> expression PLUS term .)
+    SUB             reduce using rule 1 (expression -> expression PLUS term .)
+    $end            reduce using rule 1 (expression -> expression PLUS term .)
+    RBR             reduce using rule 1 (expression -> expression PLUS term .)
+    MULT            shift and go to state 8
+    DIV             shift and go to state 9
+    POW             shift and go to state 10
+
+
+state 13
+
+    (2) expression -> expression SUB term .
+    (4) term -> term . MULT factor
+    (5) term -> term . DIV factor
+    (8) term -> term . POW factor
+
+    PLUS            reduce using rule 2 (expression -> expression SUB term .)
+    SUB             reduce using rule 2 (expression -> expression SUB term .)
+    $end            reduce using rule 2 (expression -> expression SUB term .)
+    RBR             reduce using rule 2 (expression -> expression SUB term .)
+    MULT            shift and go to state 8
+    DIV             shift and go to state 9
+    POW             shift and go to state 10
+
+
+state 14
+
+    (4) term -> term MULT factor .
+
+    MULT            reduce using rule 4 (term -> term MULT factor .)
+    DIV             reduce using rule 4 (term -> term MULT factor .)
+    POW             reduce using rule 4 (term -> term MULT factor .)
+    PLUS            reduce using rule 4 (term -> term MULT factor .)
+    SUB             reduce using rule 4 (term -> term MULT factor .)
+    $end            reduce using rule 4 (term -> term MULT factor .)
+    RBR             reduce using rule 4 (term -> term MULT factor .)
+
+
+state 15
+
+    (5) term -> term DIV factor .
+
+    MULT            reduce using rule 5 (term -> term DIV factor .)
+    DIV             reduce using rule 5 (term -> term DIV factor .)
+    POW             reduce using rule 5 (term -> term DIV factor .)
+    PLUS            reduce using rule 5 (term -> term DIV factor .)
+    SUB             reduce using rule 5 (term -> term DIV factor .)
+    $end            reduce using rule 5 (term -> term DIV factor .)
+    RBR             reduce using rule 5 (term -> term DIV factor .)
+
+
+state 16
+
+    (8) term -> term POW factor .
+
+    MULT            reduce using rule 8 (term -> term POW factor .)
+    DIV             reduce using rule 8 (term -> term POW factor .)
+    POW             reduce using rule 8 (term -> term POW factor .)
+    PLUS            reduce using rule 8 (term -> term POW factor .)
+    SUB             reduce using rule 8 (term -> term POW factor .)
+    $end            reduce using rule 8 (term -> term POW factor .)
+    RBR             reduce using rule 8 (term -> term POW factor .)
+
+
+state 17
+
+    (9) factor -> LBR expression RBR .
+
+    MULT            reduce using rule 9 (factor -> LBR expression RBR .)
+    DIV             reduce using rule 9 (factor -> LBR expression RBR .)
+    POW             reduce using rule 9 (factor -> LBR expression RBR .)
+    PLUS            reduce using rule 9 (factor -> LBR expression RBR .)
+    SUB             reduce using rule 9 (factor -> LBR expression RBR .)
+    $end            reduce using rule 9 (factor -> LBR expression RBR .)
+    RBR             reduce using rule 9 (factor -> LBR expression RBR .)
+
