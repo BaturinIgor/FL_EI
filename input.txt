@@ -1,1 +1,7 @@
-((1+2)+(3*(4+((4+1)**(1+1)))))
+def main(argc, argv){
+arg1 = 365;
+arg2= 24;
+while (arg1 > 0){
+arg1 = arg1 - 24;
+}
+}

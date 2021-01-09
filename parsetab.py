@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'AND AS ASSERT BREAK CLASS CON CONTINUE DEF DEL DIS DIV ELIF ELSE EQL EXCEPT FALSE FINALLY FOR FROM GLOBAL ID IF IMPORT IN IS LAMBDA LBR LESS LOE MOE MORE MULT NEG NONE NONLOCAL NOT NUM OR PASS PLUS POW RAISE RBR RETURN SUB TRUE TRY WHILE WITH YIELDexpression : expression PLUS termexpression : expression SUB termexpression : termterm : term MULT factorterm : term DIV factorterm : factorfactor : NUMterm : term POW factorfactor : LBR expression RBR'
+_lr_signature = 'ASSIGN COMMA COMPAR CON DEF DEN DIS DIV ELSE ID IF LBR LFBR MULT NUM PLUS POW RBR RETURN RFBR SEMICOLON SUB WHILEprogram : progbody funcprogbody :\n                | progbody funcfunc : DEF ID LBR args RBR LFBR funcbody RFBRargs :\n            | ID\n            | args COMMA IDfuncbody :\n                | funcbody if\n                | funcbody funcall\n                | funcbody assign\n                | funcbody while\n                | funcbody returnassign : ID ASSIGN expression SEMICOLON\n              | ID ASSIGN funcallfuncall : ID LBR args RBR SEMICOLONif : IF LBR expression RBR LFBR funcbody RFBR elsebranchelsebranch :\n                  | ELSE LFBR funcbody RFBRwhile : WHILE LBR expression RBR LFBR funcbody RFBRreturn : RETURN expression SEMICOLON\n              | RETURN ID SEMICOLON expression : expression PLUS term\n                  | ID PLUS termexpression : expression SUB term\n                  | ID SUB termexpression : expression COMPAR expressionexpression : term\n                  | IDterm : term MULT factorterm : term DIV factorterm : factor\n            | IDfactor : DEN expressionfactor : NUMfactor : factor POW expressionfactor : LBR expression RBR'
     
-_lr_action_items = {'NUM':([0,5,6,7,8,9,10,],[4,4,4,4,4,4,4,]),'LBR':([0,5,6,7,8,9,10,],[5,5,5,5,5,5,5,]),'$end':([1,2,3,4,12,13,14,15,16,17,],[0,-3,-6,-7,-1,-2,-4,-5,-8,-9,]),'PLUS':([1,2,3,4,11,12,13,14,15,16,17,],[6,-3,-6,-7,6,-1,-2,-4,-5,-8,-9,]),'SUB':([1,2,3,4,11,12,13,14,15,16,17,],[7,-3,-6,-7,7,-1,-2,-4,-5,-8,-9,]),'RBR':([2,3,4,11,12,13,14,15,16,17,],[-3,-6,-7,17,-1,-2,-4,-5,-8,-9,]),'MULT':([2,3,4,12,13,14,15,16,17,],[8,-6,-7,8,8,-4,-5,-8,-9,]),'DIV':([2,3,4,12,13,14,15,16,17,],[9,-6,-7,9,9,-4,-5,-8,-9,]),'POW':([2,3,4,12,13,14,15,16,17,],[10,-6,-7,10,10,-4,-5,-8,-9,]),}
+_lr_action_items = {'DEF':([0,2,3,15,],[-2,4,-3,-4,]),'$end':([1,3,15,],[0,-1,-4,]),'ID':([4,6,10,11,13,16,17,18,19,20,23,24,25,26,27,32,34,38,42,43,44,45,46,47,48,51,55,68,69,70,71,72,73,74,75,77,78,79,],[5,7,12,-8,14,-9,-10,-11,-12,-13,29,7,36,40,40,40,40,-15,-21,59,59,40,-22,59,59,40,-14,-16,-8,-8,14,14,-18,-20,-17,-8,14,-19,]),'LBR':([5,14,21,22,23,25,26,27,32,34,36,43,44,45,47,48,49,50,51,],[6,24,26,27,34,34,34,34,34,34,24,34,34,34,34,34,34,34,34,]),'RBR':([6,7,8,12,24,30,31,33,35,39,40,41,52,53,58,59,60,61,62,63,64,65,66,67,],[-5,-6,9,-7,-5,-28,-32,-35,54,56,-29,57,-34,67,-23,-33,-25,-27,-24,-26,-30,-31,-36,-37,]),'COMMA':([6,7,8,12,24,35,],[-5,-6,10,-7,-5,10,]),'LFBR':([9,56,57,76,],[11,69,70,77,]),'RFBR':([11,13,16,17,18,19,20,38,42,46,55,68,69,70,71,72,73,74,75,77,78,79,],[-8,15,-9,-10,-11,-12,-13,-15,-21,-22,-14,-16,-8,-8,73,74,-18,-20,-17,-8,79,-19,]),'IF':([11,13,16,17,18,19,20,38,42,46,55,68,69,70,71,72,73,74,75,77,78,79,],[-8,21,-9,-10,-11,-12,-13,-15,-21,-22,-14,-16,-8,-8,21,21,-18,-20,-17,-8,21,-19,]),'WHILE':([11,13,16,17,18,19,20,38,42,46,55,68,69,70,71,72,73,74,75,77,78,79,],[-8,22,-9,-10,-11,-12,-13,-15,-21,-22,-14,-16,-8,-8,22,22,-18,-20,-17,-8,22,-19,]),'RETURN':([11,13,16,17,18,19,20,38,42,46,55,68,69,70,71,72,73,74,75,77,78,79,],[-8,23,-9,-10,-11,-12,-13,-15,-21,-22,-14,-16,-8,-8,23,23,-18,-20,-17,-8,23,-19,]),'ASSIGN':([14,],[25,]),'DEN':([23,25,26,27,32,34,43,44,45,47,48,49,50,51,],[32,32,32,32,32,32,32,32,32,32,32,32,32,32,]),'NUM':([23,25,26,27,32,34,43,44,45,47,48,49,50,51,],[33,33,33,33,33,33,33,33,33,33,33,33,33,33,]),'SEMICOLON':([28,29,30,31,33,36,37,40,52,54,58,59,60,61,62,63,64,65,66,67,],[42,46,-28,-32,-35,-29,55,-29,-34,68,-23,-33,-25,-27,-24,-26,-30,-31,-36,-37,]),'PLUS':([28,29,30,31,33,36,37,39,40,41,52,53,58,59,60,61,62,63,64,65,66,67,],[43,47,-28,-32,-35,47,43,43,47,43,43,43,-23,-33,-25,43,-24,-26,-30,-31,43,-37,]),'SUB':([28,29,30,31,33,36,37,39,40,41,52,53,58,59,60,61,62,63,64,65,66,67,],[44,48,-28,-32,-35,48,44,44,48,44,44,44,-23,-33,-25,44,-24,-26,-30,-31,44,-37,]),'COMPAR':([28,29,30,31,33,36,37,39,40,41,52,53,58,59,60,61,62,63,64,65,66,67,],[45,-29,-28,-32,-35,-29,45,45,-29,45,45,45,-23,-33,-25,45,-24,-26,-30,-31,45,-37,]),'MULT':([29,30,31,33,36,40,52,58,59,60,61,62,63,64,65,66,67,],[-33,49,-32,-35,-33,-29,-34,49,-33,49,-27,49,49,-30,-31,-36,-37,]),'DIV':([29,30,31,33,36,40,52,58,59,60,61,62,63,64,65,66,67,],[-33,50,-32,-35,-33,-29,-34,50,-33,50,-27,50,50,-30,-31,-36,-37,]),'POW':([30,31,33,40,52,58,59,60,61,62,63,64,65,66,67,],[-28,51,-35,-29,-34,-23,-33,-25,-27,-24,-26,51,51,-36,-37,]),'ELSE':([73,],[76,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'expression':([0,5,],[1,11,]),'term':([0,5,6,7,],[2,2,12,13,]),'factor':([0,5,6,7,8,9,10,],[3,3,3,3,14,15,16,]),}
+_lr_goto_items = {'program':([0,],[1,]),'progbody':([0,],[2,]),'func':([2,],[3,]),'args':([6,24,],[8,35,]),'funcbody':([11,69,70,77,],[13,71,72,78,]),'if':([13,71,72,78,],[16,16,16,16,]),'funcall':([13,25,71,72,78,],[17,38,17,17,17,]),'assign':([13,71,72,78,],[18,18,18,18,]),'while':([13,71,72,78,],[19,19,19,19,]),'return':([13,71,72,78,],[20,20,20,20,]),'expression':([23,25,26,27,32,34,45,51,],[28,37,39,41,52,53,61,66,]),'term':([23,25,26,27,32,34,43,44,45,47,48,51,],[30,30,30,30,30,30,58,60,30,62,63,30,]),'factor':([23,25,26,27,32,34,43,44,45,47,48,49,50,51,],[31,31,31,31,31,31,31,31,31,31,31,64,65,31,]),'elsebranch':([73,],[75,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,14 +26,42 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> expression","S'",1,None,None,None),
-  ('expression -> expression PLUS term','expression',3,'p_expression_plus','parse.py',6),
-  ('expression -> expression SUB term','expression',3,'p_expression_minus','parse.py',10),
-  ('expression -> term','expression',1,'p_expression_term','parse.py',14),
-  ('term -> term MULT factor','term',3,'p_term_times','parse.py',18),
-  ('term -> term DIV factor','term',3,'p_term_div','parse.py',22),
-  ('term -> factor','term',1,'p_term_factor','parse.py',26),
-  ('factor -> NUM','factor',1,'p_factor_num','parse.py',30),
-  ('term -> term POW factor','term',3,'p_term_pow','parse.py',34),
-  ('factor -> LBR expression RBR','factor',3,'p_factor_expr','parse.py',38),
+  ("S' -> program","S'",1,None,None,None),
+  ('program -> progbody func','program',2,'p_program','parse.py',26),
+  ('progbody -> <empty>','progbody',0,'p_progbody','parse.py',31),
+  ('progbody -> progbody func','progbody',2,'p_progbody','parse.py',32),
+  ('func -> DEF ID LBR args RBR LFBR funcbody RFBR','func',8,'p_func','parse.py',40),
+  ('args -> <empty>','args',0,'p_args','parse.py',45),
+  ('args -> ID','args',1,'p_args','parse.py',46),
+  ('args -> args COMMA ID','args',3,'p_args','parse.py',47),
+  ('funcbody -> <empty>','funcbody',0,'p_funcbody','parse.py',57),
+  ('funcbody -> funcbody if','funcbody',2,'p_funcbody','parse.py',58),
+  ('funcbody -> funcbody funcall','funcbody',2,'p_funcbody','parse.py',59),
+  ('funcbody -> funcbody assign','funcbody',2,'p_funcbody','parse.py',60),
+  ('funcbody -> funcbody while','funcbody',2,'p_funcbody','parse.py',61),
+  ('funcbody -> funcbody return','funcbody',2,'p_funcbody','parse.py',62),
+  ('assign -> ID ASSIGN expression SEMICOLON','assign',4,'p_assign','parse.py',70),
+  ('assign -> ID ASSIGN funcall','assign',3,'p_assign','parse.py',71),
+  ('funcall -> ID LBR args RBR SEMICOLON','funcall',5,'p_funcall','parse.py',76),
+  ('if -> IF LBR expression RBR LFBR funcbody RFBR elsebranch','if',8,'p_if','parse.py',81),
+  ('elsebranch -> <empty>','elsebranch',0,'p_elsebranch','parse.py',89),
+  ('elsebranch -> ELSE LFBR funcbody RFBR','elsebranch',4,'p_elsebranch','parse.py',90),
+  ('while -> WHILE LBR expression RBR LFBR funcbody RFBR','while',7,'p_while','parse.py',96),
+  ('return -> RETURN expression SEMICOLON','return',3,'p_return','parse.py',102),
+  ('return -> RETURN ID SEMICOLON','return',3,'p_return','parse.py',103),
+  ('expression -> expression PLUS term','expression',3,'p_expression_plus','parse.py',107),
+  ('expression -> ID PLUS term','expression',3,'p_expression_plus','parse.py',108),
+  ('expression -> expression SUB term','expression',3,'p_expression_sub','parse.py',113),
+  ('expression -> ID SUB term','expression',3,'p_expression_sub','parse.py',114),
+  ('expression -> expression COMPAR expression','expression',3,'p_expression_compar','parse.py',119),
+  ('expression -> term','expression',1,'p_expression_term','parse.py',123),
+  ('expression -> ID','expression',1,'p_expression_term','parse.py',124),
+  ('term -> term MULT factor','term',3,'p_term_times','parse.py',129),
+  ('term -> term DIV factor','term',3,'p_term_div','parse.py',134),
+  ('term -> factor','term',1,'p_term_factor','parse.py',139),
+  ('term -> ID','term',1,'p_term_factor','parse.py',140),
+  ('factor -> DEN expression','factor',2,'p_factor_bin','parse.py',144),
+  ('factor -> NUM','factor',1,'p_factor_num','parse.py',148),
+  ('factor -> factor POW expression','factor',3,'p_factor_pow','parse.py',152),
+  ('factor -> LBR expression RBR','factor',3,'p_factor_expr','parse.py',156),
 ]

@@ -2,372 +2,1437 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
-    AND
-    AS
-    ASSERT
-    BREAK
-    CLASS
     CON
-    CONTINUE
-    DEF
-    DEL
     DIS
-    ELIF
-    ELSE
-    EQL
-    EXCEPT
-    FALSE
-    FINALLY
-    FOR
-    FROM
-    GLOBAL
-    ID
-    IF
-    IMPORT
-    IN
-    IS
-    LAMBDA
-    LESS
-    LOE
-    MOE
-    MORE
-    NEG
-    NONE
-    NONLOCAL
-    NOT
-    OR
-    PASS
-    RAISE
-    RETURN
-    TRUE
-    TRY
-    WHILE
-    WITH
-    YIELD
 
 Grammar
 
-Rule 0     S' -> expression
-Rule 1     expression -> expression PLUS term
-Rule 2     expression -> expression SUB term
-Rule 3     expression -> term
-Rule 4     term -> term MULT factor
-Rule 5     term -> term DIV factor
-Rule 6     term -> factor
-Rule 7     factor -> NUM
-Rule 8     term -> term POW factor
-Rule 9     factor -> LBR expression RBR
+Rule 0     S' -> program
+Rule 1     program -> progbody func
+Rule 2     progbody -> <empty>
+Rule 3     progbody -> progbody func
+Rule 4     func -> DEF ID LBR args RBR LFBR funcbody RFBR
+Rule 5     args -> <empty>
+Rule 6     args -> ID
+Rule 7     args -> args COMMA ID
+Rule 8     funcbody -> <empty>
+Rule 9     funcbody -> funcbody if
+Rule 10    funcbody -> funcbody funcall
+Rule 11    funcbody -> funcbody assign
+Rule 12    funcbody -> funcbody while
+Rule 13    funcbody -> funcbody return
+Rule 14    assign -> ID ASSIGN expression SEMICOLON
+Rule 15    assign -> ID ASSIGN funcall
+Rule 16    funcall -> ID LBR args RBR SEMICOLON
+Rule 17    if -> IF LBR expression RBR LFBR funcbody RFBR elsebranch
+Rule 18    elsebranch -> <empty>
+Rule 19    elsebranch -> ELSE LFBR funcbody RFBR
+Rule 20    while -> WHILE LBR expression RBR LFBR funcbody RFBR
+Rule 21    return -> RETURN expression SEMICOLON
+Rule 22    return -> RETURN ID SEMICOLON
+Rule 23    expression -> expression PLUS term
+Rule 24    expression -> ID PLUS term
+Rule 25    expression -> expression SUB term
+Rule 26    expression -> ID SUB term
+Rule 27    expression -> expression COMPAR expression
+Rule 28    expression -> term
+Rule 29    expression -> ID
+Rule 30    term -> term MULT factor
+Rule 31    term -> term DIV factor
+Rule 32    term -> factor
+Rule 33    term -> ID
+Rule 34    factor -> DEN expression
+Rule 35    factor -> NUM
+Rule 36    factor -> factor POW expression
+Rule 37    factor -> LBR expression RBR
 
 Terminals, with rules where they appear
 
-AND                  : 
-AS                   : 
-ASSERT               : 
-BREAK                : 
-CLASS                : 
+ASSIGN               : 14 15
+COMMA                : 7
+COMPAR               : 27
 CON                  : 
-CONTINUE             : 
-DEF                  : 
-DEL                  : 
+DEF                  : 4
+DEN                  : 34
 DIS                  : 
-DIV                  : 5
-ELIF                 : 
-ELSE                 : 
-EQL                  : 
-EXCEPT               : 
-FALSE                : 
-FINALLY              : 
-FOR                  : 
-FROM                 : 
-GLOBAL               : 
-ID                   : 
-IF                   : 
-IMPORT               : 
-IN                   : 
-IS                   : 
-LAMBDA               : 
-LBR                  : 9
-LESS                 : 
-LOE                  : 
-MOE                  : 
-MORE                 : 
-MULT                 : 4
-NEG                  : 
-NONE                 : 
-NONLOCAL             : 
-NOT                  : 
-NUM                  : 7
-OR                   : 
-PASS                 : 
-PLUS                 : 1
-POW                  : 8
-RAISE                : 
-RBR                  : 9
-RETURN               : 
-SUB                  : 2
-TRUE                 : 
-TRY                  : 
-WHILE                : 
-WITH                 : 
-YIELD                : 
+DIV                  : 31
+ELSE                 : 19
+ID                   : 4 6 7 14 15 16 22 24 26 29 33
+IF                   : 17
+LBR                  : 4 16 17 20 37
+LFBR                 : 4 17 19 20
+MULT                 : 30
+NUM                  : 35
+PLUS                 : 23 24
+POW                  : 36
+RBR                  : 4 16 17 20 37
+RETURN               : 21 22
+RFBR                 : 4 17 19 20
+SEMICOLON            : 14 16 21 22
+SUB                  : 25 26
+WHILE                : 20
 error                : 
 
 Nonterminals, with rules where they appear
 
-expression           : 1 2 9 0
-factor               : 4 5 6 8
-term                 : 1 2 3 4 5 8
+args                 : 4 7 16
+assign               : 11
+elsebranch           : 17
+expression           : 14 17 20 21 23 25 27 27 34 36 37
+factor               : 30 31 32 36
+func                 : 1 3
+funcall              : 10 15
+funcbody             : 4 9 10 11 12 13 17 19 20
+if                   : 9
+progbody             : 1 3
+program              : 0
+return               : 13
+term                 : 23 24 25 26 28 30 31
+while                : 12
 
 Parsing method: LALR
 
 state 0
 
-    (0) S' -> . expression
-    (1) expression -> . expression PLUS term
-    (2) expression -> . expression SUB term
-    (3) expression -> . term
-    (4) term -> . term MULT factor
-    (5) term -> . term DIV factor
-    (6) term -> . factor
-    (8) term -> . term POW factor
-    (7) factor -> . NUM
-    (9) factor -> . LBR expression RBR
+    (0) S' -> . program
+    (1) program -> . progbody func
+    (2) progbody -> .
+    (3) progbody -> . progbody func
 
-    NUM             shift and go to state 4
-    LBR             shift and go to state 5
+    DEF             reduce using rule 2 (progbody -> .)
 
-    expression                     shift and go to state 1
-    term                           shift and go to state 2
-    factor                         shift and go to state 3
+    program                        shift and go to state 1
+    progbody                       shift and go to state 2
 
 state 1
 
-    (0) S' -> expression .
-    (1) expression -> expression . PLUS term
-    (2) expression -> expression . SUB term
+    (0) S' -> program .
 
-    PLUS            shift and go to state 6
-    SUB             shift and go to state 7
 
 
 state 2
 
-    (3) expression -> term .
-    (4) term -> term . MULT factor
-    (5) term -> term . DIV factor
-    (8) term -> term . POW factor
+    (1) program -> progbody . func
+    (3) progbody -> progbody . func
+    (4) func -> . DEF ID LBR args RBR LFBR funcbody RFBR
 
-    PLUS            reduce using rule 3 (expression -> term .)
-    SUB             reduce using rule 3 (expression -> term .)
-    $end            reduce using rule 3 (expression -> term .)
-    RBR             reduce using rule 3 (expression -> term .)
-    MULT            shift and go to state 8
-    DIV             shift and go to state 9
-    POW             shift and go to state 10
+    DEF             shift and go to state 4
 
+    func                           shift and go to state 3
 
 state 3
 
-    (6) term -> factor .
+    (1) program -> progbody func .
+    (3) progbody -> progbody func .
 
-    MULT            reduce using rule 6 (term -> factor .)
-    DIV             reduce using rule 6 (term -> factor .)
-    POW             reduce using rule 6 (term -> factor .)
-    PLUS            reduce using rule 6 (term -> factor .)
-    SUB             reduce using rule 6 (term -> factor .)
-    $end            reduce using rule 6 (term -> factor .)
-    RBR             reduce using rule 6 (term -> factor .)
+    $end            reduce using rule 1 (program -> progbody func .)
+    DEF             reduce using rule 3 (progbody -> progbody func .)
 
 
 state 4
 
-    (7) factor -> NUM .
+    (4) func -> DEF . ID LBR args RBR LFBR funcbody RFBR
 
-    MULT            reduce using rule 7 (factor -> NUM .)
-    DIV             reduce using rule 7 (factor -> NUM .)
-    POW             reduce using rule 7 (factor -> NUM .)
-    PLUS            reduce using rule 7 (factor -> NUM .)
-    SUB             reduce using rule 7 (factor -> NUM .)
-    $end            reduce using rule 7 (factor -> NUM .)
-    RBR             reduce using rule 7 (factor -> NUM .)
+    ID              shift and go to state 5
 
 
 state 5
 
-    (9) factor -> LBR . expression RBR
-    (1) expression -> . expression PLUS term
-    (2) expression -> . expression SUB term
-    (3) expression -> . term
-    (4) term -> . term MULT factor
-    (5) term -> . term DIV factor
-    (6) term -> . factor
-    (8) term -> . term POW factor
-    (7) factor -> . NUM
-    (9) factor -> . LBR expression RBR
+    (4) func -> DEF ID . LBR args RBR LFBR funcbody RFBR
 
-    NUM             shift and go to state 4
-    LBR             shift and go to state 5
+    LBR             shift and go to state 6
 
-    expression                     shift and go to state 11
-    term                           shift and go to state 2
-    factor                         shift and go to state 3
 
 state 6
 
-    (1) expression -> expression PLUS . term
-    (4) term -> . term MULT factor
-    (5) term -> . term DIV factor
-    (6) term -> . factor
-    (8) term -> . term POW factor
-    (7) factor -> . NUM
-    (9) factor -> . LBR expression RBR
+    (4) func -> DEF ID LBR . args RBR LFBR funcbody RFBR
+    (5) args -> .
+    (6) args -> . ID
+    (7) args -> . args COMMA ID
 
-    NUM             shift and go to state 4
-    LBR             shift and go to state 5
+    RBR             reduce using rule 5 (args -> .)
+    COMMA           reduce using rule 5 (args -> .)
+    ID              shift and go to state 7
 
-    term                           shift and go to state 12
-    factor                         shift and go to state 3
+    args                           shift and go to state 8
 
 state 7
 
-    (2) expression -> expression SUB . term
-    (4) term -> . term MULT factor
-    (5) term -> . term DIV factor
-    (6) term -> . factor
-    (8) term -> . term POW factor
-    (7) factor -> . NUM
-    (9) factor -> . LBR expression RBR
+    (6) args -> ID .
 
-    NUM             shift and go to state 4
-    LBR             shift and go to state 5
+    RBR             reduce using rule 6 (args -> ID .)
+    COMMA           reduce using rule 6 (args -> ID .)
 
-    term                           shift and go to state 13
-    factor                         shift and go to state 3
 
 state 8
 
-    (4) term -> term MULT . factor
-    (7) factor -> . NUM
-    (9) factor -> . LBR expression RBR
+    (4) func -> DEF ID LBR args . RBR LFBR funcbody RFBR
+    (7) args -> args . COMMA ID
 
-    NUM             shift and go to state 4
-    LBR             shift and go to state 5
+    RBR             shift and go to state 9
+    COMMA           shift and go to state 10
 
-    factor                         shift and go to state 14
 
 state 9
 
-    (5) term -> term DIV . factor
-    (7) factor -> . NUM
-    (9) factor -> . LBR expression RBR
+    (4) func -> DEF ID LBR args RBR . LFBR funcbody RFBR
 
-    NUM             shift and go to state 4
-    LBR             shift and go to state 5
+    LFBR            shift and go to state 11
 
-    factor                         shift and go to state 15
 
 state 10
 
-    (8) term -> term POW . factor
-    (7) factor -> . NUM
-    (9) factor -> . LBR expression RBR
+    (7) args -> args COMMA . ID
 
-    NUM             shift and go to state 4
-    LBR             shift and go to state 5
+    ID              shift and go to state 12
 
-    factor                         shift and go to state 16
 
 state 11
 
-    (9) factor -> LBR expression . RBR
-    (1) expression -> expression . PLUS term
-    (2) expression -> expression . SUB term
+    (4) func -> DEF ID LBR args RBR LFBR . funcbody RFBR
+    (8) funcbody -> .
+    (9) funcbody -> . funcbody if
+    (10) funcbody -> . funcbody funcall
+    (11) funcbody -> . funcbody assign
+    (12) funcbody -> . funcbody while
+    (13) funcbody -> . funcbody return
 
-    RBR             shift and go to state 17
-    PLUS            shift and go to state 6
-    SUB             shift and go to state 7
+    RFBR            reduce using rule 8 (funcbody -> .)
+    IF              reduce using rule 8 (funcbody -> .)
+    ID              reduce using rule 8 (funcbody -> .)
+    WHILE           reduce using rule 8 (funcbody -> .)
+    RETURN          reduce using rule 8 (funcbody -> .)
 
+    funcbody                       shift and go to state 13
 
 state 12
 
-    (1) expression -> expression PLUS term .
-    (4) term -> term . MULT factor
-    (5) term -> term . DIV factor
-    (8) term -> term . POW factor
+    (7) args -> args COMMA ID .
 
-    PLUS            reduce using rule 1 (expression -> expression PLUS term .)
-    SUB             reduce using rule 1 (expression -> expression PLUS term .)
-    $end            reduce using rule 1 (expression -> expression PLUS term .)
-    RBR             reduce using rule 1 (expression -> expression PLUS term .)
-    MULT            shift and go to state 8
-    DIV             shift and go to state 9
-    POW             shift and go to state 10
+    RBR             reduce using rule 7 (args -> args COMMA ID .)
+    COMMA           reduce using rule 7 (args -> args COMMA ID .)
 
 
 state 13
 
-    (2) expression -> expression SUB term .
-    (4) term -> term . MULT factor
-    (5) term -> term . DIV factor
-    (8) term -> term . POW factor
+    (4) func -> DEF ID LBR args RBR LFBR funcbody . RFBR
+    (9) funcbody -> funcbody . if
+    (10) funcbody -> funcbody . funcall
+    (11) funcbody -> funcbody . assign
+    (12) funcbody -> funcbody . while
+    (13) funcbody -> funcbody . return
+    (17) if -> . IF LBR expression RBR LFBR funcbody RFBR elsebranch
+    (16) funcall -> . ID LBR args RBR SEMICOLON
+    (14) assign -> . ID ASSIGN expression SEMICOLON
+    (15) assign -> . ID ASSIGN funcall
+    (20) while -> . WHILE LBR expression RBR LFBR funcbody RFBR
+    (21) return -> . RETURN expression SEMICOLON
+    (22) return -> . RETURN ID SEMICOLON
 
-    PLUS            reduce using rule 2 (expression -> expression SUB term .)
-    SUB             reduce using rule 2 (expression -> expression SUB term .)
-    $end            reduce using rule 2 (expression -> expression SUB term .)
-    RBR             reduce using rule 2 (expression -> expression SUB term .)
-    MULT            shift and go to state 8
-    DIV             shift and go to state 9
-    POW             shift and go to state 10
+    RFBR            shift and go to state 15
+    IF              shift and go to state 21
+    ID              shift and go to state 14
+    WHILE           shift and go to state 22
+    RETURN          shift and go to state 23
 
+    if                             shift and go to state 16
+    funcall                        shift and go to state 17
+    assign                         shift and go to state 18
+    while                          shift and go to state 19
+    return                         shift and go to state 20
 
 state 14
 
-    (4) term -> term MULT factor .
+    (16) funcall -> ID . LBR args RBR SEMICOLON
+    (14) assign -> ID . ASSIGN expression SEMICOLON
+    (15) assign -> ID . ASSIGN funcall
 
-    MULT            reduce using rule 4 (term -> term MULT factor .)
-    DIV             reduce using rule 4 (term -> term MULT factor .)
-    POW             reduce using rule 4 (term -> term MULT factor .)
-    PLUS            reduce using rule 4 (term -> term MULT factor .)
-    SUB             reduce using rule 4 (term -> term MULT factor .)
-    $end            reduce using rule 4 (term -> term MULT factor .)
-    RBR             reduce using rule 4 (term -> term MULT factor .)
+    LBR             shift and go to state 24
+    ASSIGN          shift and go to state 25
 
 
 state 15
 
-    (5) term -> term DIV factor .
+    (4) func -> DEF ID LBR args RBR LFBR funcbody RFBR .
 
-    MULT            reduce using rule 5 (term -> term DIV factor .)
-    DIV             reduce using rule 5 (term -> term DIV factor .)
-    POW             reduce using rule 5 (term -> term DIV factor .)
-    PLUS            reduce using rule 5 (term -> term DIV factor .)
-    SUB             reduce using rule 5 (term -> term DIV factor .)
-    $end            reduce using rule 5 (term -> term DIV factor .)
-    RBR             reduce using rule 5 (term -> term DIV factor .)
+    $end            reduce using rule 4 (func -> DEF ID LBR args RBR LFBR funcbody RFBR .)
+    DEF             reduce using rule 4 (func -> DEF ID LBR args RBR LFBR funcbody RFBR .)
 
 
 state 16
 
-    (8) term -> term POW factor .
+    (9) funcbody -> funcbody if .
 
-    MULT            reduce using rule 8 (term -> term POW factor .)
-    DIV             reduce using rule 8 (term -> term POW factor .)
-    POW             reduce using rule 8 (term -> term POW factor .)
-    PLUS            reduce using rule 8 (term -> term POW factor .)
-    SUB             reduce using rule 8 (term -> term POW factor .)
-    $end            reduce using rule 8 (term -> term POW factor .)
-    RBR             reduce using rule 8 (term -> term POW factor .)
+    RFBR            reduce using rule 9 (funcbody -> funcbody if .)
+    IF              reduce using rule 9 (funcbody -> funcbody if .)
+    ID              reduce using rule 9 (funcbody -> funcbody if .)
+    WHILE           reduce using rule 9 (funcbody -> funcbody if .)
+    RETURN          reduce using rule 9 (funcbody -> funcbody if .)
 
 
 state 17
 
-    (9) factor -> LBR expression RBR .
+    (10) funcbody -> funcbody funcall .
 
-    MULT            reduce using rule 9 (factor -> LBR expression RBR .)
-    DIV             reduce using rule 9 (factor -> LBR expression RBR .)
-    POW             reduce using rule 9 (factor -> LBR expression RBR .)
-    PLUS            reduce using rule 9 (factor -> LBR expression RBR .)
-    SUB             reduce using rule 9 (factor -> LBR expression RBR .)
-    $end            reduce using rule 9 (factor -> LBR expression RBR .)
-    RBR             reduce using rule 9 (factor -> LBR expression RBR .)
+    RFBR            reduce using rule 10 (funcbody -> funcbody funcall .)
+    IF              reduce using rule 10 (funcbody -> funcbody funcall .)
+    ID              reduce using rule 10 (funcbody -> funcbody funcall .)
+    WHILE           reduce using rule 10 (funcbody -> funcbody funcall .)
+    RETURN          reduce using rule 10 (funcbody -> funcbody funcall .)
 
+
+state 18
+
+    (11) funcbody -> funcbody assign .
+
+    RFBR            reduce using rule 11 (funcbody -> funcbody assign .)
+    IF              reduce using rule 11 (funcbody -> funcbody assign .)
+    ID              reduce using rule 11 (funcbody -> funcbody assign .)
+    WHILE           reduce using rule 11 (funcbody -> funcbody assign .)
+    RETURN          reduce using rule 11 (funcbody -> funcbody assign .)
+
+
+state 19
+
+    (12) funcbody -> funcbody while .
+
+    RFBR            reduce using rule 12 (funcbody -> funcbody while .)
+    IF              reduce using rule 12 (funcbody -> funcbody while .)
+    ID              reduce using rule 12 (funcbody -> funcbody while .)
+    WHILE           reduce using rule 12 (funcbody -> funcbody while .)
+    RETURN          reduce using rule 12 (funcbody -> funcbody while .)
+
+
+state 20
+
+    (13) funcbody -> funcbody return .
+
+    RFBR            reduce using rule 13 (funcbody -> funcbody return .)
+    IF              reduce using rule 13 (funcbody -> funcbody return .)
+    ID              reduce using rule 13 (funcbody -> funcbody return .)
+    WHILE           reduce using rule 13 (funcbody -> funcbody return .)
+    RETURN          reduce using rule 13 (funcbody -> funcbody return .)
+
+
+state 21
+
+    (17) if -> IF . LBR expression RBR LFBR funcbody RFBR elsebranch
+
+    LBR             shift and go to state 26
+
+
+state 22
+
+    (20) while -> WHILE . LBR expression RBR LFBR funcbody RFBR
+
+    LBR             shift and go to state 27
+
+
+state 23
+
+    (21) return -> RETURN . expression SEMICOLON
+    (22) return -> RETURN . ID SEMICOLON
+    (23) expression -> . expression PLUS term
+    (24) expression -> . ID PLUS term
+    (25) expression -> . expression SUB term
+    (26) expression -> . ID SUB term
+    (27) expression -> . expression COMPAR expression
+    (28) expression -> . term
+    (29) expression -> . ID
+    (30) term -> . term MULT factor
+    (31) term -> . term DIV factor
+    (32) term -> . factor
+    (33) term -> . ID
+    (34) factor -> . DEN expression
+    (35) factor -> . NUM
+    (36) factor -> . factor POW expression
+    (37) factor -> . LBR expression RBR
+
+    ID              shift and go to state 29
+    DEN             shift and go to state 32
+    NUM             shift and go to state 33
+    LBR             shift and go to state 34
+
+    expression                     shift and go to state 28
+    term                           shift and go to state 30
+    factor                         shift and go to state 31
+
+state 24
+
+    (16) funcall -> ID LBR . args RBR SEMICOLON
+    (5) args -> .
+    (6) args -> . ID
+    (7) args -> . args COMMA ID
+
+    RBR             reduce using rule 5 (args -> .)
+    COMMA           reduce using rule 5 (args -> .)
+    ID              shift and go to state 7
+
+    args                           shift and go to state 35
+
+state 25
+
+    (14) assign -> ID ASSIGN . expression SEMICOLON
+    (15) assign -> ID ASSIGN . funcall
+    (23) expression -> . expression PLUS term
+    (24) expression -> . ID PLUS term
+    (25) expression -> . expression SUB term
+    (26) expression -> . ID SUB term
+    (27) expression -> . expression COMPAR expression
+    (28) expression -> . term
+    (29) expression -> . ID
+    (16) funcall -> . ID LBR args RBR SEMICOLON
+    (30) term -> . term MULT factor
+    (31) term -> . term DIV factor
+    (32) term -> . factor
+    (33) term -> . ID
+    (34) factor -> . DEN expression
+    (35) factor -> . NUM
+    (36) factor -> . factor POW expression
+    (37) factor -> . LBR expression RBR
+
+    ID              shift and go to state 36
+    DEN             shift and go to state 32
+    NUM             shift and go to state 33
+    LBR             shift and go to state 34
+
+    expression                     shift and go to state 37
+    funcall                        shift and go to state 38
+    term                           shift and go to state 30
+    factor                         shift and go to state 31
+
+state 26
+
+    (17) if -> IF LBR . expression RBR LFBR funcbody RFBR elsebranch
+    (23) expression -> . expression PLUS term
+    (24) expression -> . ID PLUS term
+    (25) expression -> . expression SUB term
+    (26) expression -> . ID SUB term
+    (27) expression -> . expression COMPAR expression
+    (28) expression -> . term
+    (29) expression -> . ID
+    (30) term -> . term MULT factor
+    (31) term -> . term DIV factor
+    (32) term -> . factor
+    (33) term -> . ID
+    (34) factor -> . DEN expression
+    (35) factor -> . NUM
+    (36) factor -> . factor POW expression
+    (37) factor -> . LBR expression RBR
+
+    ID              shift and go to state 40
+    DEN             shift and go to state 32
+    NUM             shift and go to state 33
+    LBR             shift and go to state 34
+
+    expression                     shift and go to state 39
+    term                           shift and go to state 30
+    factor                         shift and go to state 31
+
+state 27
+
+    (20) while -> WHILE LBR . expression RBR LFBR funcbody RFBR
+    (23) expression -> . expression PLUS term
+    (24) expression -> . ID PLUS term
+    (25) expression -> . expression SUB term
+    (26) expression -> . ID SUB term
+    (27) expression -> . expression COMPAR expression
+    (28) expression -> . term
+    (29) expression -> . ID
+    (30) term -> . term MULT factor
+    (31) term -> . term DIV factor
+    (32) term -> . factor
+    (33) term -> . ID
+    (34) factor -> . DEN expression
+    (35) factor -> . NUM
+    (36) factor -> . factor POW expression
+    (37) factor -> . LBR expression RBR
+
+    ID              shift and go to state 40
+    DEN             shift and go to state 32
+    NUM             shift and go to state 33
+    LBR             shift and go to state 34
+
+    expression                     shift and go to state 41
+    term                           shift and go to state 30
+    factor                         shift and go to state 31
+
+state 28
+
+    (21) return -> RETURN expression . SEMICOLON
+    (23) expression -> expression . PLUS term
+    (25) expression -> expression . SUB term
+    (27) expression -> expression . COMPAR expression
+
+    SEMICOLON       shift and go to state 42
+    PLUS            shift and go to state 43
+    SUB             shift and go to state 44
+    COMPAR          shift and go to state 45
+
+
+state 29
+
+    (22) return -> RETURN ID . SEMICOLON
+    (24) expression -> ID . PLUS term
+    (26) expression -> ID . SUB term
+    (29) expression -> ID .
+    (33) term -> ID .
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for SUB resolved as shift
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for SUB resolved as shift
+  ! reduce/reduce conflict for COMPAR resolved using rule 29 (expression -> ID .)
+    SEMICOLON       shift and go to state 46
+    PLUS            shift and go to state 47
+    SUB             shift and go to state 48
+    COMPAR          reduce using rule 29 (expression -> ID .)
+    MULT            reduce using rule 33 (term -> ID .)
+    DIV             reduce using rule 33 (term -> ID .)
+
+  ! SEMICOLON       [ reduce using rule 29 (expression -> ID .) ]
+  ! PLUS            [ reduce using rule 29 (expression -> ID .) ]
+  ! SUB             [ reduce using rule 29 (expression -> ID .) ]
+  ! SEMICOLON       [ reduce using rule 33 (term -> ID .) ]
+  ! PLUS            [ reduce using rule 33 (term -> ID .) ]
+  ! SUB             [ reduce using rule 33 (term -> ID .) ]
+  ! COMPAR          [ reduce using rule 33 (term -> ID .) ]
+
+
+state 30
+
+    (28) expression -> term .
+    (30) term -> term . MULT factor
+    (31) term -> term . DIV factor
+
+  ! shift/reduce conflict for MULT resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+    SEMICOLON       reduce using rule 28 (expression -> term .)
+    PLUS            reduce using rule 28 (expression -> term .)
+    SUB             reduce using rule 28 (expression -> term .)
+    COMPAR          reduce using rule 28 (expression -> term .)
+    RBR             reduce using rule 28 (expression -> term .)
+    POW             reduce using rule 28 (expression -> term .)
+    MULT            shift and go to state 49
+    DIV             shift and go to state 50
+
+  ! MULT            [ reduce using rule 28 (expression -> term .) ]
+  ! DIV             [ reduce using rule 28 (expression -> term .) ]
+
+
+state 31
+
+    (32) term -> factor .
+    (36) factor -> factor . POW expression
+
+  ! shift/reduce conflict for POW resolved as shift
+    MULT            reduce using rule 32 (term -> factor .)
+    DIV             reduce using rule 32 (term -> factor .)
+    SEMICOLON       reduce using rule 32 (term -> factor .)
+    PLUS            reduce using rule 32 (term -> factor .)
+    SUB             reduce using rule 32 (term -> factor .)
+    COMPAR          reduce using rule 32 (term -> factor .)
+    RBR             reduce using rule 32 (term -> factor .)
+    POW             shift and go to state 51
+
+  ! POW             [ reduce using rule 32 (term -> factor .) ]
+
+
+state 32
+
+    (34) factor -> DEN . expression
+    (23) expression -> . expression PLUS term
+    (24) expression -> . ID PLUS term
+    (25) expression -> . expression SUB term
+    (26) expression -> . ID SUB term
+    (27) expression -> . expression COMPAR expression
+    (28) expression -> . term
+    (29) expression -> . ID
+    (30) term -> . term MULT factor
+    (31) term -> . term DIV factor
+    (32) term -> . factor
+    (33) term -> . ID
+    (34) factor -> . DEN expression
+    (35) factor -> . NUM
+    (36) factor -> . factor POW expression
+    (37) factor -> . LBR expression RBR
+
+    ID              shift and go to state 40
+    DEN             shift and go to state 32
+    NUM             shift and go to state 33
+    LBR             shift and go to state 34
+
+    expression                     shift and go to state 52
+    term                           shift and go to state 30
+    factor                         shift and go to state 31
+
+state 33
+
+    (35) factor -> NUM .
+
+    POW             reduce using rule 35 (factor -> NUM .)
+    MULT            reduce using rule 35 (factor -> NUM .)
+    DIV             reduce using rule 35 (factor -> NUM .)
+    SEMICOLON       reduce using rule 35 (factor -> NUM .)
+    PLUS            reduce using rule 35 (factor -> NUM .)
+    SUB             reduce using rule 35 (factor -> NUM .)
+    COMPAR          reduce using rule 35 (factor -> NUM .)
+    RBR             reduce using rule 35 (factor -> NUM .)
+
+
+state 34
+
+    (37) factor -> LBR . expression RBR
+    (23) expression -> . expression PLUS term
+    (24) expression -> . ID PLUS term
+    (25) expression -> . expression SUB term
+    (26) expression -> . ID SUB term
+    (27) expression -> . expression COMPAR expression
+    (28) expression -> . term
+    (29) expression -> . ID
+    (30) term -> . term MULT factor
+    (31) term -> . term DIV factor
+    (32) term -> . factor
+    (33) term -> . ID
+    (34) factor -> . DEN expression
+    (35) factor -> . NUM
+    (36) factor -> . factor POW expression
+    (37) factor -> . LBR expression RBR
+
+    ID              shift and go to state 40
+    DEN             shift and go to state 32
+    NUM             shift and go to state 33
+    LBR             shift and go to state 34
+
+    expression                     shift and go to state 53
+    term                           shift and go to state 30
+    factor                         shift and go to state 31
+
+state 35
+
+    (16) funcall -> ID LBR args . RBR SEMICOLON
+    (7) args -> args . COMMA ID
+
+    RBR             shift and go to state 54
+    COMMA           shift and go to state 10
+
+
+state 36
+
+    (24) expression -> ID . PLUS term
+    (26) expression -> ID . SUB term
+    (29) expression -> ID .
+    (16) funcall -> ID . LBR args RBR SEMICOLON
+    (33) term -> ID .
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for SUB resolved as shift
+  ! reduce/reduce conflict for SEMICOLON resolved using rule 29 (expression -> ID .)
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for SUB resolved as shift
+  ! reduce/reduce conflict for COMPAR resolved using rule 29 (expression -> ID .)
+    PLUS            shift and go to state 47
+    SUB             shift and go to state 48
+    SEMICOLON       reduce using rule 29 (expression -> ID .)
+    COMPAR          reduce using rule 29 (expression -> ID .)
+    LBR             shift and go to state 24
+    MULT            reduce using rule 33 (term -> ID .)
+    DIV             reduce using rule 33 (term -> ID .)
+
+  ! PLUS            [ reduce using rule 29 (expression -> ID .) ]
+  ! SUB             [ reduce using rule 29 (expression -> ID .) ]
+  ! SEMICOLON       [ reduce using rule 33 (term -> ID .) ]
+  ! PLUS            [ reduce using rule 33 (term -> ID .) ]
+  ! SUB             [ reduce using rule 33 (term -> ID .) ]
+  ! COMPAR          [ reduce using rule 33 (term -> ID .) ]
+
+
+state 37
+
+    (14) assign -> ID ASSIGN expression . SEMICOLON
+    (23) expression -> expression . PLUS term
+    (25) expression -> expression . SUB term
+    (27) expression -> expression . COMPAR expression
+
+    SEMICOLON       shift and go to state 55
+    PLUS            shift and go to state 43
+    SUB             shift and go to state 44
+    COMPAR          shift and go to state 45
+
+
+state 38
+
+    (15) assign -> ID ASSIGN funcall .
+
+    RFBR            reduce using rule 15 (assign -> ID ASSIGN funcall .)
+    IF              reduce using rule 15 (assign -> ID ASSIGN funcall .)
+    ID              reduce using rule 15 (assign -> ID ASSIGN funcall .)
+    WHILE           reduce using rule 15 (assign -> ID ASSIGN funcall .)
+    RETURN          reduce using rule 15 (assign -> ID ASSIGN funcall .)
+
+
+state 39
+
+    (17) if -> IF LBR expression . RBR LFBR funcbody RFBR elsebranch
+    (23) expression -> expression . PLUS term
+    (25) expression -> expression . SUB term
+    (27) expression -> expression . COMPAR expression
+
+    RBR             shift and go to state 56
+    PLUS            shift and go to state 43
+    SUB             shift and go to state 44
+    COMPAR          shift and go to state 45
+
+
+state 40
+
+    (24) expression -> ID . PLUS term
+    (26) expression -> ID . SUB term
+    (29) expression -> ID .
+    (33) term -> ID .
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for SUB resolved as shift
+  ! reduce/reduce conflict for MULT resolved using rule 29 (expression -> ID .)
+  ! reduce/reduce conflict for DIV resolved using rule 29 (expression -> ID .)
+  ! reduce/reduce conflict for RBR resolved using rule 29 (expression -> ID .)
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for SUB resolved as shift
+  ! reduce/reduce conflict for COMPAR resolved using rule 29 (expression -> ID .)
+  ! reduce/reduce conflict for POW resolved using rule 29 (expression -> ID .)
+  ! reduce/reduce conflict for SEMICOLON resolved using rule 29 (expression -> ID .)
+    PLUS            shift and go to state 47
+    SUB             shift and go to state 48
+    RBR             reduce using rule 29 (expression -> ID .)
+    COMPAR          reduce using rule 29 (expression -> ID .)
+    POW             reduce using rule 29 (expression -> ID .)
+    MULT            reduce using rule 29 (expression -> ID .)
+    DIV             reduce using rule 29 (expression -> ID .)
+    SEMICOLON       reduce using rule 29 (expression -> ID .)
+
+  ! PLUS            [ reduce using rule 29 (expression -> ID .) ]
+  ! SUB             [ reduce using rule 29 (expression -> ID .) ]
+  ! MULT            [ reduce using rule 33 (term -> ID .) ]
+  ! DIV             [ reduce using rule 33 (term -> ID .) ]
+  ! RBR             [ reduce using rule 33 (term -> ID .) ]
+  ! PLUS            [ reduce using rule 33 (term -> ID .) ]
+  ! SUB             [ reduce using rule 33 (term -> ID .) ]
+  ! COMPAR          [ reduce using rule 33 (term -> ID .) ]
+  ! POW             [ reduce using rule 33 (term -> ID .) ]
+  ! SEMICOLON       [ reduce using rule 33 (term -> ID .) ]
+
+
+state 41
+
+    (20) while -> WHILE LBR expression . RBR LFBR funcbody RFBR
+    (23) expression -> expression . PLUS term
+    (25) expression -> expression . SUB term
+    (27) expression -> expression . COMPAR expression
+
+    RBR             shift and go to state 57
+    PLUS            shift and go to state 43
+    SUB             shift and go to state 44
+    COMPAR          shift and go to state 45
+
+
+state 42
+
+    (21) return -> RETURN expression SEMICOLON .
+
+    RFBR            reduce using rule 21 (return -> RETURN expression SEMICOLON .)
+    IF              reduce using rule 21 (return -> RETURN expression SEMICOLON .)
+    ID              reduce using rule 21 (return -> RETURN expression SEMICOLON .)
+    WHILE           reduce using rule 21 (return -> RETURN expression SEMICOLON .)
+    RETURN          reduce using rule 21 (return -> RETURN expression SEMICOLON .)
+
+
+state 43
+
+    (23) expression -> expression PLUS . term
+    (30) term -> . term MULT factor
+    (31) term -> . term DIV factor
+    (32) term -> . factor
+    (33) term -> . ID
+    (34) factor -> . DEN expression
+    (35) factor -> . NUM
+    (36) factor -> . factor POW expression
+    (37) factor -> . LBR expression RBR
+
+    ID              shift and go to state 59
+    DEN             shift and go to state 32
+    NUM             shift and go to state 33
+    LBR             shift and go to state 34
+
+    term                           shift and go to state 58
+    factor                         shift and go to state 31
+
+state 44
+
+    (25) expression -> expression SUB . term
+    (30) term -> . term MULT factor
+    (31) term -> . term DIV factor
+    (32) term -> . factor
+    (33) term -> . ID
+    (34) factor -> . DEN expression
+    (35) factor -> . NUM
+    (36) factor -> . factor POW expression
+    (37) factor -> . LBR expression RBR
+
+    ID              shift and go to state 59
+    DEN             shift and go to state 32
+    NUM             shift and go to state 33
+    LBR             shift and go to state 34
+
+    term                           shift and go to state 60
+    factor                         shift and go to state 31
+
+state 45
+
+    (27) expression -> expression COMPAR . expression
+    (23) expression -> . expression PLUS term
+    (24) expression -> . ID PLUS term
+    (25) expression -> . expression SUB term
+    (26) expression -> . ID SUB term
+    (27) expression -> . expression COMPAR expression
+    (28) expression -> . term
+    (29) expression -> . ID
+    (30) term -> . term MULT factor
+    (31) term -> . term DIV factor
+    (32) term -> . factor
+    (33) term -> . ID
+    (34) factor -> . DEN expression
+    (35) factor -> . NUM
+    (36) factor -> . factor POW expression
+    (37) factor -> . LBR expression RBR
+
+    ID              shift and go to state 40
+    DEN             shift and go to state 32
+    NUM             shift and go to state 33
+    LBR             shift and go to state 34
+
+    expression                     shift and go to state 61
+    term                           shift and go to state 30
+    factor                         shift and go to state 31
+
+state 46
+
+    (22) return -> RETURN ID SEMICOLON .
+
+    RFBR            reduce using rule 22 (return -> RETURN ID SEMICOLON .)
+    IF              reduce using rule 22 (return -> RETURN ID SEMICOLON .)
+    ID              reduce using rule 22 (return -> RETURN ID SEMICOLON .)
+    WHILE           reduce using rule 22 (return -> RETURN ID SEMICOLON .)
+    RETURN          reduce using rule 22 (return -> RETURN ID SEMICOLON .)
+
+
+state 47
+
+    (24) expression -> ID PLUS . term
+    (30) term -> . term MULT factor
+    (31) term -> . term DIV factor
+    (32) term -> . factor
+    (33) term -> . ID
+    (34) factor -> . DEN expression
+    (35) factor -> . NUM
+    (36) factor -> . factor POW expression
+    (37) factor -> . LBR expression RBR
+
+    ID              shift and go to state 59
+    DEN             shift and go to state 32
+    NUM             shift and go to state 33
+    LBR             shift and go to state 34
+
+    term                           shift and go to state 62
+    factor                         shift and go to state 31
+
+state 48
+
+    (26) expression -> ID SUB . term
+    (30) term -> . term MULT factor
+    (31) term -> . term DIV factor
+    (32) term -> . factor
+    (33) term -> . ID
+    (34) factor -> . DEN expression
+    (35) factor -> . NUM
+    (36) factor -> . factor POW expression
+    (37) factor -> . LBR expression RBR
+
+    ID              shift and go to state 59
+    DEN             shift and go to state 32
+    NUM             shift and go to state 33
+    LBR             shift and go to state 34
+
+    term                           shift and go to state 63
+    factor                         shift and go to state 31
+
+state 49
+
+    (30) term -> term MULT . factor
+    (34) factor -> . DEN expression
+    (35) factor -> . NUM
+    (36) factor -> . factor POW expression
+    (37) factor -> . LBR expression RBR
+
+    DEN             shift and go to state 32
+    NUM             shift and go to state 33
+    LBR             shift and go to state 34
+
+    factor                         shift and go to state 64
+
+state 50
+
+    (31) term -> term DIV . factor
+    (34) factor -> . DEN expression
+    (35) factor -> . NUM
+    (36) factor -> . factor POW expression
+    (37) factor -> . LBR expression RBR
+
+    DEN             shift and go to state 32
+    NUM             shift and go to state 33
+    LBR             shift and go to state 34
+
+    factor                         shift and go to state 65
+
+state 51
+
+    (36) factor -> factor POW . expression
+    (23) expression -> . expression PLUS term
+    (24) expression -> . ID PLUS term
+    (25) expression -> . expression SUB term
+    (26) expression -> . ID SUB term
+    (27) expression -> . expression COMPAR expression
+    (28) expression -> . term
+    (29) expression -> . ID
+    (30) term -> . term MULT factor
+    (31) term -> . term DIV factor
+    (32) term -> . factor
+    (33) term -> . ID
+    (34) factor -> . DEN expression
+    (35) factor -> . NUM
+    (36) factor -> . factor POW expression
+    (37) factor -> . LBR expression RBR
+
+    ID              shift and go to state 40
+    DEN             shift and go to state 32
+    NUM             shift and go to state 33
+    LBR             shift and go to state 34
+
+    factor                         shift and go to state 31
+    expression                     shift and go to state 66
+    term                           shift and go to state 30
+
+state 52
+
+    (34) factor -> DEN expression .
+    (23) expression -> expression . PLUS term
+    (25) expression -> expression . SUB term
+    (27) expression -> expression . COMPAR expression
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for SUB resolved as shift
+  ! shift/reduce conflict for COMPAR resolved as shift
+    POW             reduce using rule 34 (factor -> DEN expression .)
+    MULT            reduce using rule 34 (factor -> DEN expression .)
+    DIV             reduce using rule 34 (factor -> DEN expression .)
+    SEMICOLON       reduce using rule 34 (factor -> DEN expression .)
+    RBR             reduce using rule 34 (factor -> DEN expression .)
+    PLUS            shift and go to state 43
+    SUB             shift and go to state 44
+    COMPAR          shift and go to state 45
+
+  ! PLUS            [ reduce using rule 34 (factor -> DEN expression .) ]
+  ! SUB             [ reduce using rule 34 (factor -> DEN expression .) ]
+  ! COMPAR          [ reduce using rule 34 (factor -> DEN expression .) ]
+
+
+state 53
+
+    (37) factor -> LBR expression . RBR
+    (23) expression -> expression . PLUS term
+    (25) expression -> expression . SUB term
+    (27) expression -> expression . COMPAR expression
+
+    RBR             shift and go to state 67
+    PLUS            shift and go to state 43
+    SUB             shift and go to state 44
+    COMPAR          shift and go to state 45
+
+
+state 54
+
+    (16) funcall -> ID LBR args RBR . SEMICOLON
+
+    SEMICOLON       shift and go to state 68
+
+
+state 55
+
+    (14) assign -> ID ASSIGN expression SEMICOLON .
+
+    RFBR            reduce using rule 14 (assign -> ID ASSIGN expression SEMICOLON .)
+    IF              reduce using rule 14 (assign -> ID ASSIGN expression SEMICOLON .)
+    ID              reduce using rule 14 (assign -> ID ASSIGN expression SEMICOLON .)
+    WHILE           reduce using rule 14 (assign -> ID ASSIGN expression SEMICOLON .)
+    RETURN          reduce using rule 14 (assign -> ID ASSIGN expression SEMICOLON .)
+
+
+state 56
+
+    (17) if -> IF LBR expression RBR . LFBR funcbody RFBR elsebranch
+
+    LFBR            shift and go to state 69
+
+
+state 57
+
+    (20) while -> WHILE LBR expression RBR . LFBR funcbody RFBR
+
+    LFBR            shift and go to state 70
+
+
+state 58
+
+    (23) expression -> expression PLUS term .
+    (30) term -> term . MULT factor
+    (31) term -> term . DIV factor
+
+  ! shift/reduce conflict for MULT resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+    SEMICOLON       reduce using rule 23 (expression -> expression PLUS term .)
+    PLUS            reduce using rule 23 (expression -> expression PLUS term .)
+    SUB             reduce using rule 23 (expression -> expression PLUS term .)
+    COMPAR          reduce using rule 23 (expression -> expression PLUS term .)
+    RBR             reduce using rule 23 (expression -> expression PLUS term .)
+    POW             reduce using rule 23 (expression -> expression PLUS term .)
+    MULT            shift and go to state 49
+    DIV             shift and go to state 50
+
+  ! MULT            [ reduce using rule 23 (expression -> expression PLUS term .) ]
+  ! DIV             [ reduce using rule 23 (expression -> expression PLUS term .) ]
+
+
+state 59
+
+    (33) term -> ID .
+
+    PLUS            reduce using rule 33 (term -> ID .)
+    SUB             reduce using rule 33 (term -> ID .)
+    COMPAR          reduce using rule 33 (term -> ID .)
+    POW             reduce using rule 33 (term -> ID .)
+    MULT            reduce using rule 33 (term -> ID .)
+    DIV             reduce using rule 33 (term -> ID .)
+    SEMICOLON       reduce using rule 33 (term -> ID .)
+    RBR             reduce using rule 33 (term -> ID .)
+
+
+state 60
+
+    (25) expression -> expression SUB term .
+    (30) term -> term . MULT factor
+    (31) term -> term . DIV factor
+
+  ! shift/reduce conflict for MULT resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+    SEMICOLON       reduce using rule 25 (expression -> expression SUB term .)
+    PLUS            reduce using rule 25 (expression -> expression SUB term .)
+    SUB             reduce using rule 25 (expression -> expression SUB term .)
+    COMPAR          reduce using rule 25 (expression -> expression SUB term .)
+    RBR             reduce using rule 25 (expression -> expression SUB term .)
+    POW             reduce using rule 25 (expression -> expression SUB term .)
+    MULT            shift and go to state 49
+    DIV             shift and go to state 50
+
+  ! MULT            [ reduce using rule 25 (expression -> expression SUB term .) ]
+  ! DIV             [ reduce using rule 25 (expression -> expression SUB term .) ]
+
+
+state 61
+
+    (27) expression -> expression COMPAR expression .
+    (23) expression -> expression . PLUS term
+    (25) expression -> expression . SUB term
+    (27) expression -> expression . COMPAR expression
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for SUB resolved as shift
+  ! shift/reduce conflict for COMPAR resolved as shift
+    SEMICOLON       reduce using rule 27 (expression -> expression COMPAR expression .)
+    RBR             reduce using rule 27 (expression -> expression COMPAR expression .)
+    POW             reduce using rule 27 (expression -> expression COMPAR expression .)
+    MULT            reduce using rule 27 (expression -> expression COMPAR expression .)
+    DIV             reduce using rule 27 (expression -> expression COMPAR expression .)
+    PLUS            shift and go to state 43
+    SUB             shift and go to state 44
+    COMPAR          shift and go to state 45
+
+  ! PLUS            [ reduce using rule 27 (expression -> expression COMPAR expression .) ]
+  ! SUB             [ reduce using rule 27 (expression -> expression COMPAR expression .) ]
+  ! COMPAR          [ reduce using rule 27 (expression -> expression COMPAR expression .) ]
+
+
+state 62
+
+    (24) expression -> ID PLUS term .
+    (30) term -> term . MULT factor
+    (31) term -> term . DIV factor
+
+  ! shift/reduce conflict for MULT resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+    SEMICOLON       reduce using rule 24 (expression -> ID PLUS term .)
+    PLUS            reduce using rule 24 (expression -> ID PLUS term .)
+    SUB             reduce using rule 24 (expression -> ID PLUS term .)
+    COMPAR          reduce using rule 24 (expression -> ID PLUS term .)
+    RBR             reduce using rule 24 (expression -> ID PLUS term .)
+    POW             reduce using rule 24 (expression -> ID PLUS term .)
+    MULT            shift and go to state 49
+    DIV             shift and go to state 50
+
+  ! MULT            [ reduce using rule 24 (expression -> ID PLUS term .) ]
+  ! DIV             [ reduce using rule 24 (expression -> ID PLUS term .) ]
+
+
+state 63
+
+    (26) expression -> ID SUB term .
+    (30) term -> term . MULT factor
+    (31) term -> term . DIV factor
+
+  ! shift/reduce conflict for MULT resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+    SEMICOLON       reduce using rule 26 (expression -> ID SUB term .)
+    PLUS            reduce using rule 26 (expression -> ID SUB term .)
+    SUB             reduce using rule 26 (expression -> ID SUB term .)
+    COMPAR          reduce using rule 26 (expression -> ID SUB term .)
+    RBR             reduce using rule 26 (expression -> ID SUB term .)
+    POW             reduce using rule 26 (expression -> ID SUB term .)
+    MULT            shift and go to state 49
+    DIV             shift and go to state 50
+
+  ! MULT            [ reduce using rule 26 (expression -> ID SUB term .) ]
+  ! DIV             [ reduce using rule 26 (expression -> ID SUB term .) ]
+
+
+state 64
+
+    (30) term -> term MULT factor .
+    (36) factor -> factor . POW expression
+
+  ! shift/reduce conflict for POW resolved as shift
+    MULT            reduce using rule 30 (term -> term MULT factor .)
+    DIV             reduce using rule 30 (term -> term MULT factor .)
+    SEMICOLON       reduce using rule 30 (term -> term MULT factor .)
+    PLUS            reduce using rule 30 (term -> term MULT factor .)
+    SUB             reduce using rule 30 (term -> term MULT factor .)
+    COMPAR          reduce using rule 30 (term -> term MULT factor .)
+    RBR             reduce using rule 30 (term -> term MULT factor .)
+    POW             shift and go to state 51
+
+  ! POW             [ reduce using rule 30 (term -> term MULT factor .) ]
+
+
+state 65
+
+    (31) term -> term DIV factor .
+    (36) factor -> factor . POW expression
+
+  ! shift/reduce conflict for POW resolved as shift
+    MULT            reduce using rule 31 (term -> term DIV factor .)
+    DIV             reduce using rule 31 (term -> term DIV factor .)
+    SEMICOLON       reduce using rule 31 (term -> term DIV factor .)
+    PLUS            reduce using rule 31 (term -> term DIV factor .)
+    SUB             reduce using rule 31 (term -> term DIV factor .)
+    COMPAR          reduce using rule 31 (term -> term DIV factor .)
+    RBR             reduce using rule 31 (term -> term DIV factor .)
+    POW             shift and go to state 51
+
+  ! POW             [ reduce using rule 31 (term -> term DIV factor .) ]
+
+
+state 66
+
+    (36) factor -> factor POW expression .
+    (23) expression -> expression . PLUS term
+    (25) expression -> expression . SUB term
+    (27) expression -> expression . COMPAR expression
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for SUB resolved as shift
+  ! shift/reduce conflict for COMPAR resolved as shift
+    POW             reduce using rule 36 (factor -> factor POW expression .)
+    MULT            reduce using rule 36 (factor -> factor POW expression .)
+    DIV             reduce using rule 36 (factor -> factor POW expression .)
+    SEMICOLON       reduce using rule 36 (factor -> factor POW expression .)
+    RBR             reduce using rule 36 (factor -> factor POW expression .)
+    PLUS            shift and go to state 43
+    SUB             shift and go to state 44
+    COMPAR          shift and go to state 45
+
+  ! PLUS            [ reduce using rule 36 (factor -> factor POW expression .) ]
+  ! SUB             [ reduce using rule 36 (factor -> factor POW expression .) ]
+  ! COMPAR          [ reduce using rule 36 (factor -> factor POW expression .) ]
+
+
+state 67
+
+    (37) factor -> LBR expression RBR .
+
+    POW             reduce using rule 37 (factor -> LBR expression RBR .)
+    MULT            reduce using rule 37 (factor -> LBR expression RBR .)
+    DIV             reduce using rule 37 (factor -> LBR expression RBR .)
+    SEMICOLON       reduce using rule 37 (factor -> LBR expression RBR .)
+    PLUS            reduce using rule 37 (factor -> LBR expression RBR .)
+    SUB             reduce using rule 37 (factor -> LBR expression RBR .)
+    COMPAR          reduce using rule 37 (factor -> LBR expression RBR .)
+    RBR             reduce using rule 37 (factor -> LBR expression RBR .)
+
+
+state 68
+
+    (16) funcall -> ID LBR args RBR SEMICOLON .
+
+    RFBR            reduce using rule 16 (funcall -> ID LBR args RBR SEMICOLON .)
+    IF              reduce using rule 16 (funcall -> ID LBR args RBR SEMICOLON .)
+    ID              reduce using rule 16 (funcall -> ID LBR args RBR SEMICOLON .)
+    WHILE           reduce using rule 16 (funcall -> ID LBR args RBR SEMICOLON .)
+    RETURN          reduce using rule 16 (funcall -> ID LBR args RBR SEMICOLON .)
+
+
+state 69
+
+    (17) if -> IF LBR expression RBR LFBR . funcbody RFBR elsebranch
+    (8) funcbody -> .
+    (9) funcbody -> . funcbody if
+    (10) funcbody -> . funcbody funcall
+    (11) funcbody -> . funcbody assign
+    (12) funcbody -> . funcbody while
+    (13) funcbody -> . funcbody return
+
+    RFBR            reduce using rule 8 (funcbody -> .)
+    IF              reduce using rule 8 (funcbody -> .)
+    ID              reduce using rule 8 (funcbody -> .)
+    WHILE           reduce using rule 8 (funcbody -> .)
+    RETURN          reduce using rule 8 (funcbody -> .)
+
+    funcbody                       shift and go to state 71
+
+state 70
+
+    (20) while -> WHILE LBR expression RBR LFBR . funcbody RFBR
+    (8) funcbody -> .
+    (9) funcbody -> . funcbody if
+    (10) funcbody -> . funcbody funcall
+    (11) funcbody -> . funcbody assign
+    (12) funcbody -> . funcbody while
+    (13) funcbody -> . funcbody return
+
+    RFBR            reduce using rule 8 (funcbody -> .)
+    IF              reduce using rule 8 (funcbody -> .)
+    ID              reduce using rule 8 (funcbody -> .)
+    WHILE           reduce using rule 8 (funcbody -> .)
+    RETURN          reduce using rule 8 (funcbody -> .)
+
+    funcbody                       shift and go to state 72
+
+state 71
+
+    (17) if -> IF LBR expression RBR LFBR funcbody . RFBR elsebranch
+    (9) funcbody -> funcbody . if
+    (10) funcbody -> funcbody . funcall
+    (11) funcbody -> funcbody . assign
+    (12) funcbody -> funcbody . while
+    (13) funcbody -> funcbody . return
+    (17) if -> . IF LBR expression RBR LFBR funcbody RFBR elsebranch
+    (16) funcall -> . ID LBR args RBR SEMICOLON
+    (14) assign -> . ID ASSIGN expression SEMICOLON
+    (15) assign -> . ID ASSIGN funcall
+    (20) while -> . WHILE LBR expression RBR LFBR funcbody RFBR
+    (21) return -> . RETURN expression SEMICOLON
+    (22) return -> . RETURN ID SEMICOLON
+
+    RFBR            shift and go to state 73
+    IF              shift and go to state 21
+    ID              shift and go to state 14
+    WHILE           shift and go to state 22
+    RETURN          shift and go to state 23
+
+    if                             shift and go to state 16
+    funcall                        shift and go to state 17
+    assign                         shift and go to state 18
+    while                          shift and go to state 19
+    return                         shift and go to state 20
+
+state 72
+
+    (20) while -> WHILE LBR expression RBR LFBR funcbody . RFBR
+    (9) funcbody -> funcbody . if
+    (10) funcbody -> funcbody . funcall
+    (11) funcbody -> funcbody . assign
+    (12) funcbody -> funcbody . while
+    (13) funcbody -> funcbody . return
+    (17) if -> . IF LBR expression RBR LFBR funcbody RFBR elsebranch
+    (16) funcall -> . ID LBR args RBR SEMICOLON
+    (14) assign -> . ID ASSIGN expression SEMICOLON
+    (15) assign -> . ID ASSIGN funcall
+    (20) while -> . WHILE LBR expression RBR LFBR funcbody RFBR
+    (21) return -> . RETURN expression SEMICOLON
+    (22) return -> . RETURN ID SEMICOLON
+
+    RFBR            shift and go to state 74
+    IF              shift and go to state 21
+    ID              shift and go to state 14
+    WHILE           shift and go to state 22
+    RETURN          shift and go to state 23
+
+    if                             shift and go to state 16
+    funcall                        shift and go to state 17
+    assign                         shift and go to state 18
+    while                          shift and go to state 19
+    return                         shift and go to state 20
+
+state 73
+
+    (17) if -> IF LBR expression RBR LFBR funcbody RFBR . elsebranch
+    (18) elsebranch -> .
+    (19) elsebranch -> . ELSE LFBR funcbody RFBR
+
+    RFBR            reduce using rule 18 (elsebranch -> .)
+    IF              reduce using rule 18 (elsebranch -> .)
+    ID              reduce using rule 18 (elsebranch -> .)
+    WHILE           reduce using rule 18 (elsebranch -> .)
+    RETURN          reduce using rule 18 (elsebranch -> .)
+    ELSE            shift and go to state 76
+
+    elsebranch                     shift and go to state 75
+
+state 74
+
+    (20) while -> WHILE LBR expression RBR LFBR funcbody RFBR .
+
+    RFBR            reduce using rule 20 (while -> WHILE LBR expression RBR LFBR funcbody RFBR .)
+    IF              reduce using rule 20 (while -> WHILE LBR expression RBR LFBR funcbody RFBR .)
+    ID              reduce using rule 20 (while -> WHILE LBR expression RBR LFBR funcbody RFBR .)
+    WHILE           reduce using rule 20 (while -> WHILE LBR expression RBR LFBR funcbody RFBR .)
+    RETURN          reduce using rule 20 (while -> WHILE LBR expression RBR LFBR funcbody RFBR .)
+
+
+state 75
+
+    (17) if -> IF LBR expression RBR LFBR funcbody RFBR elsebranch .
+
+    RFBR            reduce using rule 17 (if -> IF LBR expression RBR LFBR funcbody RFBR elsebranch .)
+    IF              reduce using rule 17 (if -> IF LBR expression RBR LFBR funcbody RFBR elsebranch .)
+    ID              reduce using rule 17 (if -> IF LBR expression RBR LFBR funcbody RFBR elsebranch .)
+    WHILE           reduce using rule 17 (if -> IF LBR expression RBR LFBR funcbody RFBR elsebranch .)
+    RETURN          reduce using rule 17 (if -> IF LBR expression RBR LFBR funcbody RFBR elsebranch .)
+
+
+state 76
+
+    (19) elsebranch -> ELSE . LFBR funcbody RFBR
+
+    LFBR            shift and go to state 77
+
+
+state 77
+
+    (19) elsebranch -> ELSE LFBR . funcbody RFBR
+    (8) funcbody -> .
+    (9) funcbody -> . funcbody if
+    (10) funcbody -> . funcbody funcall
+    (11) funcbody -> . funcbody assign
+    (12) funcbody -> . funcbody while
+    (13) funcbody -> . funcbody return
+
+    RFBR            reduce using rule 8 (funcbody -> .)
+    IF              reduce using rule 8 (funcbody -> .)
+    ID              reduce using rule 8 (funcbody -> .)
+    WHILE           reduce using rule 8 (funcbody -> .)
+    RETURN          reduce using rule 8 (funcbody -> .)
+
+    funcbody                       shift and go to state 78
+
+state 78
+
+    (19) elsebranch -> ELSE LFBR funcbody . RFBR
+    (9) funcbody -> funcbody . if
+    (10) funcbody -> funcbody . funcall
+    (11) funcbody -> funcbody . assign
+    (12) funcbody -> funcbody . while
+    (13) funcbody -> funcbody . return
+    (17) if -> . IF LBR expression RBR LFBR funcbody RFBR elsebranch
+    (16) funcall -> . ID LBR args RBR SEMICOLON
+    (14) assign -> . ID ASSIGN expression SEMICOLON
+    (15) assign -> . ID ASSIGN funcall
+    (20) while -> . WHILE LBR expression RBR LFBR funcbody RFBR
+    (21) return -> . RETURN expression SEMICOLON
+    (22) return -> . RETURN ID SEMICOLON
+
+    RFBR            shift and go to state 79
+    IF              shift and go to state 21
+    ID              shift and go to state 14
+    WHILE           shift and go to state 22
+    RETURN          shift and go to state 23
+
+    if                             shift and go to state 16
+    funcall                        shift and go to state 17
+    assign                         shift and go to state 18
+    while                          shift and go to state 19
+    return                         shift and go to state 20
+
+state 79
+
+    (19) elsebranch -> ELSE LFBR funcbody RFBR .
+
+    RFBR            reduce using rule 19 (elsebranch -> ELSE LFBR funcbody RFBR .)
+    IF              reduce using rule 19 (elsebranch -> ELSE LFBR funcbody RFBR .)
+    ID              reduce using rule 19 (elsebranch -> ELSE LFBR funcbody RFBR .)
+    WHILE           reduce using rule 19 (elsebranch -> ELSE LFBR funcbody RFBR .)
+    RETURN          reduce using rule 19 (elsebranch -> ELSE LFBR funcbody RFBR .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for SEMICOLON in state 29 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 29 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 29 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 29 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 29 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 29 resolved as shift
+WARNING: shift/reduce conflict for MULT in state 30 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 30 resolved as shift
+WARNING: shift/reduce conflict for POW in state 31 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 36 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 36 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 36 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 36 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 40 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 40 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 40 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 40 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 52 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 52 resolved as shift
+WARNING: shift/reduce conflict for COMPAR in state 52 resolved as shift
+WARNING: shift/reduce conflict for MULT in state 58 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 58 resolved as shift
+WARNING: shift/reduce conflict for MULT in state 60 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 60 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 61 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 61 resolved as shift
+WARNING: shift/reduce conflict for COMPAR in state 61 resolved as shift
+WARNING: shift/reduce conflict for MULT in state 62 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 62 resolved as shift
+WARNING: shift/reduce conflict for MULT in state 63 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 63 resolved as shift
+WARNING: shift/reduce conflict for POW in state 64 resolved as shift
+WARNING: shift/reduce conflict for POW in state 65 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 66 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 66 resolved as shift
+WARNING: shift/reduce conflict for COMPAR in state 66 resolved as shift
+WARNING: reduce/reduce conflict in state 29 resolved using rule (expression -> ID)
+WARNING: rejected rule (term -> ID) in state 29
+WARNING: reduce/reduce conflict in state 36 resolved using rule (expression -> ID)
+WARNING: rejected rule (term -> ID) in state 36
+WARNING: reduce/reduce conflict in state 40 resolved using rule (expression -> ID)
+WARNING: rejected rule (term -> ID) in state 40

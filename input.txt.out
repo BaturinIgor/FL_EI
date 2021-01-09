@@ -1,1 +1,23 @@
-result = 1+2+3*(4+(4+1)**(1+1)) = 90
+def:
+	None
+	main:
+		args:
+			argc
+			argv
+		funcbody:
+			assign:
+				arg1
+				365
+			assign:
+				arg2
+				24
+			while:
+				>:
+					arg1
+					0
+				funcbody:
+					assign:
+						arg1
+						-:
+							arg1
+							24
