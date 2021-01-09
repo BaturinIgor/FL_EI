@@ -339,6 +339,11 @@ def outputing(text):
     write_file.write(str(result))
     return result
 
+def outputing_tests(text):
+    result = build_tree(text)
+    result = str(result)
+    return result
+
 def pretty_printing(result):
     global resultList
     resultList = str(result).split('\n')
