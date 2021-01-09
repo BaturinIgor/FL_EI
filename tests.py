@@ -1,6 +1,6 @@
 import unittest
 
-from parse import outputing
+from parse import outputing_tests
 
 
 class Tests(unittest.TestCase):
@@ -8,7 +8,7 @@ class Tests(unittest.TestCase):
         read_file = open('test1.txt', 'r')
         text = read_file.read()
         read_file.close()
-        result = outputing(text)
+        result = outputing_tests(text)
         read_file = open('res1.txt', 'r')
         answer = read_file.read()
         read_file.close()
@@ -18,7 +18,7 @@ class Tests(unittest.TestCase):
         read_file = open('test2.txt', 'r')
         text = read_file.read()
         read_file.close()
-        result = outputing(text)
+        result = outputing_tests(text)
         read_file = open('res2.txt', 'r')
         answer = read_file.read()
         read_file.close()
