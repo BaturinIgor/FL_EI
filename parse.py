@@ -162,7 +162,6 @@ def p_error(p):
     print("Unexpected token:", p)
     sys.exit()
 
-
 parser = yacc.yacc()
 
 def build_tree(text):
@@ -355,11 +354,6 @@ def pretty_printing(result):
 
     endProg()
 
-read_file = open('input.txt', 'r')
-text = read_file.read()
-
-pretty_printing(outputing(text))
-
 #----------------------------
 
 def remove_brackets(term): #удаление лишних скобок
@@ -383,3 +377,12 @@ def remove_brackets(term): #удаление лишних скобок
 string1 = "((2+((2+2)*3)-1))"
 
 print(remove_brackets(string1))
+
+
+if __name__ == '__main__':
+    if len(sys.argv) == 2:
+        read_file = open(sys.argv[1], 'r')
+        text = read_file.read()
+        pretty_printing(outputing(text))
+    else:
+        print("No input file")
