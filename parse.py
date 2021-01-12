@@ -5,6 +5,7 @@ import re
 
 from lex import tokens
 
+
 class Node:
     def parts_str(self):
         st = []
@@ -22,6 +23,7 @@ class Node:
     def __init__(self, type, parts):
         self.type = type
         self.parts = parts
+
 
 def p_program(p):
     '''program : progbody func'''
@@ -75,7 +77,7 @@ def p_assign(p):
 
 def p_funcall(p):
     '''funcall : ID LBR args RBR SEMICOLON'''
-    p[0] = Node('call func '+p[1], [p[3]])
+    p[0] = Node('call func ' + p[1], [p[3]])
 
 
 def p_if(p):
@@ -104,6 +106,7 @@ def p_return(p):
               | RETURN ID SEMICOLON '''
     p[0] = Node('return', p[2])
 
+
 def p_expression_plus(p):
     '''expression : expression PLUS term
                   | ID PLUS term'''
@@ -117,7 +120,16 @@ def p_expression_sub(p):
 
 
 def p_expression_compar(p):
-    '''expression : expression COMPAR expression'''
+    '''expression : expression MOREQ expression
+                  | expression LESEQ expression
+                  | expression LT expression
+                  | expression GT expression
+                  | expression EQ expression
+                  | expression NE expression'''
+    p[0] = Node(p[2], [p[1], p[3]])
+
+def p_expression_bin(p):
+    '''expression : expression DIS term'''
     p[0] = Node(p[2], [p[1], p[3]])
 
 def p_expression_term(p):
@@ -130,6 +142,9 @@ def p_term_times(p):
     'term : term MULT factor'
     p[0] = Node(p[2], [p[1], p[3]])
 
+def p_term_bin(p):
+    'term : term CON factor'
+    p[0] = Node(p[2], [p[1], p[3]])
 
 def p_term_div(p):
     'term : term DIV factor'
@@ -141,17 +156,21 @@ def p_term_factor(p):
             | ID'''
     p[0] = p[1]
 
+
 def p_factor_bin(p):
     'factor : DEN expression'
     p[0] = Node(p[1], [p[2]])
+
 
 def p_factor_num(p):
     'factor : NUM'
     p[0] = p[1]
 
+
 def p_factor_pow(p):
     'factor : factor POW expression'
     p[0] = Node(p[2], [p[1], p[3]])
+
 
 def p_factor_expr(p):
     'factor : LBR expression RBR'
@@ -162,7 +181,9 @@ def p_error(p):
     print("Unexpected token:", p)
     sys.exit()
 
+
 parser = yacc.yacc()
+
 
 def build_tree(text):
     return parser.parse(text)
@@ -173,23 +194,28 @@ countTab = deque()
 resultList = []
 currentTab = 0
 assinc = False
+prettyPrint = ""
+flag = 0;
+
 
 def ifWhile(mass):
-    return "a > b"
+    global flag
+    flag = 1;
+    return expression_processing(mass)
 
 
 def counterTab(type):
     r = re.compile(".*" + type)
-    stingList = list(filter(r.match, resultList)) if list(filter(r.match, resultList)) is not None else None
-    if len(stingList) == 0:
+    stringList = list(filter(r.match, resultList)) if list(filter(r.match, resultList)) is not None else None
+    if len(stringList) == 0:
         return
     count = 0
-    sting = stingList[0]
-    if sting is not None:
-        for char in sting:
+    string = stringList[0]
+    if string is not None:
+        for char in string:
             if char == '\t':
                 count = count + 1
-    return count, sting
+    return count, string
 
 
 def printCurrentTab():
@@ -210,16 +236,19 @@ def printBracket(type):
     tabs = ''
     global currentTab
     global assinc
+    global resultList
+    global prettyPrint
     if len(countTab) > 0:
         elm = countTab.pop()
-        if count <= elm[2]:
+        if count <= elm[2] or (type == 'else' and elm[0] == 'if'  and count == elm[2]+1):
             if type == "assign" and count == elm[2]:
                 countTab.append(elm)
                 return tabs
             for i in range(elm[1]):
+                #print(i)
                 tabs = tabs + '\t'
             tabs = tabs + '}'
-            tabs = tabs + '\n'
+            tabs = tabs + '\n' if type != 'else' else tabs
             currentTab = int(elm[1])
             assinc = False
         else:
@@ -237,13 +266,16 @@ def printBracket(type):
 
 def assign(mass):
     global currentTab
-    mass[0] = None
-    mass[1] = None
+    global resultList
     string = '\n'
     string = string + printBracket("assign")
     currentTab = currentTab if string != '\n' else currentTab + 1
     string = string + printCurrentTab()
-    string = string + 'a=(b+1)*c'
+    string = string + mass[0] + "=" + expression_processing(mass[1]) + ";"
+    mass[0] = None
+    mass[1] = None
+    string123 = counterTab("assign")[1]
+    resultList.remove(string123)
     return string
 
 
@@ -252,9 +284,10 @@ def argg(mass):
     for arg in mass:
         string.append(arg)
         string.append(', ')
-    string.pop()
+    if len(string) > 1:
+        string.pop()
     string.append(') {')
-    # mass = None
+    mass = None
 
     return ''.join(string)
 
@@ -262,38 +295,43 @@ def argg(mass):
 def insertType(type, parts):
     string = None
     global currentTab
+    global assinc
+    global flag
     if str(type) == 'while' or type == 'WHILE':
         string = '\n'
         string = string + printBracket(type)
-        currentTab = currentTab if string != '\n' else currentTab + 1
+        currentTab = currentTab if string == '\n' else currentTab + 1
         string = string + printCurrentTab()
-        string = string + "while ( " + ifWhile(parts[0]) + ' ) {'
+        string = string + "while " + ifWhile(parts[0]) + " {"
+        flag = 0
         saveTab(type, currentTab)
+        assinc = False
         parts[0] = None
     if str(type) == 'if' or str(type) == 'IF':
         string = '\n'
         string = string + printBracket(type)
-        currentTab = currentTab if string != '\n' else currentTab + 1
+        currentTab = currentTab if string == '\n' else currentTab + 1
         string = string + printCurrentTab()
-        string = string + "if ( " + ifWhile(parts[0]) + ' ) {'
+        string = string + "if " + ifWhile(parts[0]) + " {"
+        flag = 0
         saveTab(type, currentTab)
+        assinc = False
         parts[0] = None
     if str(type) == 'else' or str(type) == 'ELSE':
         string = '\n'
         string = string + printBracket(type)
-        currentTab = currentTab if string != '\n' else currentTab + 1
-        string = string + printCurrentTab()
+        string = string + ' '
         string = string + "else {"
         saveTab(type, currentTab)
-        parts[0] = None
+        assinc = False
     return string
 
 
 def insertReturn(node):
     bracket = printBracket(node.type)
     string = '\n' + printCurrentTab()
-    string = string + 'return ' + node.parts
-    string = string + "\n" + bracket
+    string = string + '\t' + 'return '  + node.parts + ";"
+    string = string + bracket
     return string
 
 
@@ -323,14 +361,18 @@ def recurs(result):
             if i is not None and isinstance(i, Node):
                 recurs(i)
 
+
 def endProg():
-    if len(countTab) > 0:
+    global prettyPrint
+    while len(countTab) > 0:
         tabs = "\n"
-        for rl in range(countTab.pop()[1]):
+        size = countTab.pop()[1]
+        for rl in range(size):
             tabs = tabs + '\t'
         tabs = tabs + "}"
-        print(tabs)
-    print('}')
+        prettyPrint += str(tabs)
+        prettyPrint += ' '
+
 
 def outputing(text):
     result = build_tree(text)
@@ -338,25 +380,29 @@ def outputing(text):
     write_file.write(str(result))
     return result
 
+
 def outputing_tests(text):
-    result = build_tree(text)
-    result = str(result)
-    return result
+    return build_tree(text)
+
 
 def pretty_printing(result):
     global resultList
+    global prettyPrint
     resultList = str(result).split('\n')
+    mass1.clear()
+    prettyPrint = ""
     recurs(result)
-
     for out in mass1:
         if str(out) != 'None' and str(out) != 'args' and str(out) != 'funcbody' and str(out) != 'body':
-            print(out, end=' ')
+            prettyPrint += out
+            prettyPrint += ' '
 
     endProg()
+    return prettyPrint + '\n}'
 
-#----------------------------
 
-def remove_brackets(term): #удаление лишних скобок
+# ----------------------------
+def remove_brackets(term):  # удаление лишних скобок
     a = 0
     while True:
         try:
@@ -374,15 +420,85 @@ def remove_brackets(term): #удаление лишних скобок
             continue
         term = new_term
     return term
-string1 = "((2+((2+2)*3)-1))"
 
-print(remove_brackets(string1))
+def expression_processing(mass):
+    global flag
+    string = str(mass)
+    if string.isdigit():
+        return string
+    string = '\n' + string + '\n'
+    tabs = []
+    symbols = []
+    operations = deque()
+    variables = deque()
+    number = 1;
+    while string.count('\n') >= 2:
+        match = re.search(r'\n(.*)\n', string)
+
+        count = len(match.group(1)) - len(match.group(1).replace("\t", ""))
+        symbol = match.group(1).replace("\t", "")
+        if symbol.find(':') != -1:
+            symbol = symbol.replace(":", "")
+        tabs.append(str(count))
+        if symbol.isalnum():
+            symbols.append(str(number))
+            variables.append(symbol)
+            number += 1
+        else:
+            symbols.append(symbol)
+        string = string[string.index(symbol) + 1:]
+    fl = 0
+    result = ""
+    #print()
+    for index in range(len(tabs)):
+        if index == 0:
+            if not symbols[index].isdigit():
+                tabs[index] = str(int(tabs[index + 1]) - 1)
+            else:
+                if len(tabs) >= 2:
+                    tabs[index] = tabs[index + 1]
+        if not symbols[index].isdigit():
+            if (int(tabs[index - 1]) - int(tabs[index])) > 1 and index != len(tabs) - 1 and index != 0:
+                result += ")" * (int(tabs[index - 1]) - int(tabs[index]) - 1)
+            if fl == 0:
+                result += "("
+                operations.append(symbols[index])
+            else:
+                result += operations.pop()
+                operations.append(symbols[index])
+                result += "("
+                fl = 0
+        else:
+            if (int(tabs[index - 1]) - int(tabs[index])) > 1 and index != len(tabs) - 1 and index != 0:
+                result += ")" * (int(tabs[index - 1]) - int(tabs[index]) - 1)
+            if fl == 0:
+                result += symbols[index]
+                fl = 1
+            else:
+                result += operations.pop()
+                result += symbols[index]
+                result += ")"
+        if index == len(tabs) - 1:
+            result += ")" * (int(tabs[index]) - int(tabs[0]) - 1)
+    if flag == 0:
+        expression = remove_brackets(result)
+    else:
+        expression = result
+    for index in range(number - 1, 0, -1):
+        expression = expression.replace(str(index), variables.pop(), 1)
+    return expression
 
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:
         read_file = open(sys.argv[1], 'r')
         text = read_file.read()
-        pretty_printing(outputing(text))
+        tree = outputing(text)
+
+        write_file = open('input.txt.out', 'w')
+        write_file.write(str(tree))
+        
+        write_file = open('prettyprinting.txt', 'w')
+        write_file.write(pretty_printing(tree))
     else:
         print("No input file")

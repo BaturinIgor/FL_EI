@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'ASSIGN COMMA COMPAR CON DEF DEN DIS DIV ELSE ID IF LBR LFBR MULT NUM PLUS POW RBR RETURN RFBR SEMICOLON SUB WHILEprogram : progbody funcprogbody :\n                | progbody funcfunc : DEF ID LBR args RBR LFBR funcbody RFBRargs :\n            | ID\n            | args COMMA IDfuncbody :\n                | funcbody if\n                | funcbody funcall\n                | funcbody assign\n                | funcbody while\n                | funcbody returnassign : ID ASSIGN expression SEMICOLON\n              | ID ASSIGN funcallfuncall : ID LBR args RBR SEMICOLONif : IF LBR expression RBR LFBR funcbody RFBR elsebranchelsebranch :\n                  | ELSE LFBR funcbody RFBRwhile : WHILE LBR expression RBR LFBR funcbody RFBRreturn : RETURN expression SEMICOLON\n              | RETURN ID SEMICOLON expression : expression PLUS term\n                  | ID PLUS termexpression : expression SUB term\n                  | ID SUB termexpression : expression COMPAR expressionexpression : term\n                  | IDterm : term MULT factorterm : term DIV factorterm : factor\n            | IDfactor : DEN expressionfactor : NUMfactor : factor POW expressionfactor : LBR expression RBR'
+_lr_signature = 'ASSIGN COMMA COMPAR CON DEF DEN DIS DIV ELSE EQ GT ID IF LBR LESEQ LFBR LT MOREQ MULT NE NUM PLUS POW RBR RETURN RFBR SEMICOLON SUB WHILEprogram : progbody funcprogbody :\n                | progbody funcfunc : DEF ID LBR args RBR LFBR funcbody RFBRargs :\n            | ID\n            | args COMMA IDfuncbody :\n                | funcbody if\n                | funcbody funcall\n                | funcbody assign\n                | funcbody while\n                | funcbody returnassign : ID ASSIGN expression SEMICOLON\n              | ID ASSIGN funcallfuncall : ID LBR args RBR SEMICOLONif : IF LBR expression RBR LFBR funcbody RFBR elsebranchelsebranch :\n                  | ELSE LFBR funcbody RFBRwhile : WHILE LBR expression RBR LFBR funcbody RFBRreturn : RETURN expression SEMICOLON\n              | RETURN ID SEMICOLON expression : expression PLUS term\n                  | ID PLUS termexpression : expression SUB term\n                  | ID SUB termexpression : expression MOREQ expression\n                  | expression LESEQ expression\n                  | expression LT expression\n                  | expression GT expression\n                  | expression EQ expression\n                  | expression NE expressionexpression : expression DIS termexpression : term\n                  | IDterm : term MULT factorterm : term CON factorterm : term DIV factorterm : factor\n            | IDfactor : DEN expressionfactor : NUMfactor : factor POW expressionfactor : LBR expression RBR'
     
-_lr_action_items = {'DEF':([0,2,3,15,],[-2,4,-3,-4,]),'$end':([1,3,15,],[0,-1,-4,]),'ID':([4,6,10,11,13,16,17,18,19,20,23,24,25,26,27,32,34,38,42,43,44,45,46,47,48,51,55,68,69,70,71,72,73,74,75,77,78,79,],[5,7,12,-8,14,-9,-10,-11,-12,-13,29,7,36,40,40,40,40,-15,-21,59,59,40,-22,59,59,40,-14,-16,-8,-8,14,14,-18,-20,-17,-8,14,-19,]),'LBR':([5,14,21,22,23,25,26,27,32,34,36,43,44,45,47,48,49,50,51,],[6,24,26,27,34,34,34,34,34,34,24,34,34,34,34,34,34,34,34,]),'RBR':([6,7,8,12,24,30,31,33,35,39,40,41,52,53,58,59,60,61,62,63,64,65,66,67,],[-5,-6,9,-7,-5,-28,-32,-35,54,56,-29,57,-34,67,-23,-33,-25,-27,-24,-26,-30,-31,-36,-37,]),'COMMA':([6,7,8,12,24,35,],[-5,-6,10,-7,-5,10,]),'LFBR':([9,56,57,76,],[11,69,70,77,]),'RFBR':([11,13,16,17,18,19,20,38,42,46,55,68,69,70,71,72,73,74,75,77,78,79,],[-8,15,-9,-10,-11,-12,-13,-15,-21,-22,-14,-16,-8,-8,73,74,-18,-20,-17,-8,79,-19,]),'IF':([11,13,16,17,18,19,20,38,42,46,55,68,69,70,71,72,73,74,75,77,78,79,],[-8,21,-9,-10,-11,-12,-13,-15,-21,-22,-14,-16,-8,-8,21,21,-18,-20,-17,-8,21,-19,]),'WHILE':([11,13,16,17,18,19,20,38,42,46,55,68,69,70,71,72,73,74,75,77,78,79,],[-8,22,-9,-10,-11,-12,-13,-15,-21,-22,-14,-16,-8,-8,22,22,-18,-20,-17,-8,22,-19,]),'RETURN':([11,13,16,17,18,19,20,38,42,46,55,68,69,70,71,72,73,74,75,77,78,79,],[-8,23,-9,-10,-11,-12,-13,-15,-21,-22,-14,-16,-8,-8,23,23,-18,-20,-17,-8,23,-19,]),'ASSIGN':([14,],[25,]),'DEN':([23,25,26,27,32,34,43,44,45,47,48,49,50,51,],[32,32,32,32,32,32,32,32,32,32,32,32,32,32,]),'NUM':([23,25,26,27,32,34,43,44,45,47,48,49,50,51,],[33,33,33,33,33,33,33,33,33,33,33,33,33,33,]),'SEMICOLON':([28,29,30,31,33,36,37,40,52,54,58,59,60,61,62,63,64,65,66,67,],[42,46,-28,-32,-35,-29,55,-29,-34,68,-23,-33,-25,-27,-24,-26,-30,-31,-36,-37,]),'PLUS':([28,29,30,31,33,36,37,39,40,41,52,53,58,59,60,61,62,63,64,65,66,67,],[43,47,-28,-32,-35,47,43,43,47,43,43,43,-23,-33,-25,43,-24,-26,-30,-31,43,-37,]),'SUB':([28,29,30,31,33,36,37,39,40,41,52,53,58,59,60,61,62,63,64,65,66,67,],[44,48,-28,-32,-35,48,44,44,48,44,44,44,-23,-33,-25,44,-24,-26,-30,-31,44,-37,]),'COMPAR':([28,29,30,31,33,36,37,39,40,41,52,53,58,59,60,61,62,63,64,65,66,67,],[45,-29,-28,-32,-35,-29,45,45,-29,45,45,45,-23,-33,-25,45,-24,-26,-30,-31,45,-37,]),'MULT':([29,30,31,33,36,40,52,58,59,60,61,62,63,64,65,66,67,],[-33,49,-32,-35,-33,-29,-34,49,-33,49,-27,49,49,-30,-31,-36,-37,]),'DIV':([29,30,31,33,36,40,52,58,59,60,61,62,63,64,65,66,67,],[-33,50,-32,-35,-33,-29,-34,50,-33,50,-27,50,50,-30,-31,-36,-37,]),'POW':([30,31,33,40,52,58,59,60,61,62,63,64,65,66,67,],[-28,51,-35,-29,-34,-23,-33,-25,-27,-24,-26,51,51,-36,-37,]),'ELSE':([73,],[76,]),}
+_lr_action_items = {'DEF':([0,2,3,15,],[-2,4,-3,-4,]),'$end':([1,3,15,],[0,-1,-4,]),'ID':([4,6,10,11,13,16,17,18,19,20,23,24,25,26,27,32,34,38,42,43,44,45,46,47,48,49,50,51,52,53,54,58,62,82,83,84,85,86,87,88,89,91,92,93,],[5,7,12,-8,14,-9,-10,-11,-12,-13,29,7,36,40,40,40,40,-15,-21,66,66,40,40,40,40,40,40,66,-22,66,66,40,-14,-16,-8,-8,14,14,-18,-20,-17,-8,14,-19,]),'LBR':([5,14,21,22,23,25,26,27,32,34,36,43,44,45,46,47,48,49,50,51,53,54,55,56,57,58,],[6,24,26,27,34,34,34,34,34,34,24,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,]),'RBR':([6,7,8,12,24,30,31,33,35,39,40,41,59,60,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,],[-5,-6,9,-7,-5,-34,-39,-42,61,63,-35,64,-41,81,-23,-40,-25,-27,-28,-29,-30,-31,-32,-33,-24,-26,-36,-37,-38,-43,-44,]),'COMMA':([6,7,8,12,24,35,],[-5,-6,10,-7,-5,10,]),'LFBR':([9,63,64,90,],[11,83,84,91,]),'RFBR':([11,13,16,17,18,19,20,38,42,52,62,82,83,84,85,86,87,88,89,91,92,93,],[-8,15,-9,-10,-11,-12,-13,-15,-21,-22,-14,-16,-8,-8,87,88,-18,-20,-17,-8,93,-19,]),'IF':([11,13,16,17,18,19,20,38,42,52,62,82,83,84,85,86,87,88,89,91,92,93,],[-8,21,-9,-10,-11,-12,-13,-15,-21,-22,-14,-16,-8,-8,21,21,-18,-20,-17,-8,21,-19,]),'WHILE':([11,13,16,17,18,19,20,38,42,52,62,82,83,84,85,86,87,88,89,91,92,93,],[-8,22,-9,-10,-11,-12,-13,-15,-21,-22,-14,-16,-8,-8,22,22,-18,-20,-17,-8,22,-19,]),'RETURN':([11,13,16,17,18,19,20,38,42,52,62,82,83,84,85,86,87,88,89,91,92,93,],[-8,23,-9,-10,-11,-12,-13,-15,-21,-22,-14,-16,-8,-8,23,23,-18,-20,-17,-8,23,-19,]),'ASSIGN':([14,],[25,]),'DEN':([23,25,26,27,32,34,43,44,45,46,47,48,49,50,51,53,54,55,56,57,58,],[32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,]),'NUM':([23,25,26,27,32,34,43,44,45,46,47,48,49,50,51,53,54,55,56,57,58,],[33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,]),'SEMICOLON':([28,29,30,31,33,36,37,40,59,61,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,],[42,52,-34,-39,-42,-35,62,-35,-41,82,-23,-40,-25,-27,-28,-29,-30,-31,-32,-33,-24,-26,-36,-37,-38,-43,-44,]),'PLUS':([28,29,30,31,33,36,37,39,40,41,59,60,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,],[43,53,-34,-39,-42,53,43,43,53,43,43,43,-23,-40,-25,43,43,43,43,43,43,-33,-24,-26,-36,-37,-38,43,-44,]),'SUB':([28,29,30,31,33,36,37,39,40,41,59,60,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,],[44,54,-34,-39,-42,54,44,44,54,44,44,44,-23,-40,-25,44,44,44,44,44,44,-33,-24,-26,-36,-37,-38,44,-44,]),'MOREQ':([28,29,30,31,33,36,37,39,40,41,59,60,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,],[45,-35,-34,-39,-42,-35,45,45,-35,45,45,45,-23,-40,-25,45,45,45,45,45,45,-33,-24,-26,-36,-37,-38,45,-44,]),'LESEQ':([28,29,30,31,33,36,37,39,40,41,59,60,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,],[46,-35,-34,-39,-42,-35,46,46,-35,46,46,46,-23,-40,-25,46,46,46,46,46,46,-33,-24,-26,-36,-37,-38,46,-44,]),'LT':([28,29,30,31,33,36,37,39,40,41,59,60,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,],[47,-35,-34,-39,-42,-35,47,47,-35,47,47,47,-23,-40,-25,47,47,47,47,47,47,-33,-24,-26,-36,-37,-38,47,-44,]),'GT':([28,29,30,31,33,36,37,39,40,41,59,60,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,],[48,-35,-34,-39,-42,-35,48,48,-35,48,48,48,-23,-40,-25,48,48,48,48,48,48,-33,-24,-26,-36,-37,-38,48,-44,]),'EQ':([28,29,30,31,33,36,37,39,40,41,59,60,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,],[49,-35,-34,-39,-42,-35,49,49,-35,49,49,49,-23,-40,-25,49,49,49,49,49,49,-33,-24,-26,-36,-37,-38,49,-44,]),'NE':([28,29,30,31,33,36,37,39,40,41,59,60,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,],[50,-35,-34,-39,-42,-35,50,50,-35,50,50,50,-23,-40,-25,50,50,50,50,50,50,-33,-24,-26,-36,-37,-38,50,-44,]),'DIS':([28,29,30,31,33,36,37,39,40,41,59,60,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,],[51,-35,-34,-39,-42,-35,51,51,-35,51,51,51,-23,-40,-25,51,51,51,51,51,51,-33,-24,-26,-36,-37,-38,51,-44,]),'MULT':([29,30,31,33,36,40,59,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,],[-40,55,-39,-42,-40,-35,-41,55,-40,55,-27,-28,-29,-30,-31,-32,55,55,55,-36,-37,-38,-43,-44,]),'CON':([29,30,31,33,36,40,59,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,],[-40,56,-39,-42,-40,-35,-41,56,-40,56,-27,-28,-29,-30,-31,-32,56,56,56,-36,-37,-38,-43,-44,]),'DIV':([29,30,31,33,36,40,59,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,],[-40,57,-39,-42,-40,-35,-41,57,-40,57,-27,-28,-29,-30,-31,-32,57,57,57,-36,-37,-38,-43,-44,]),'POW':([30,31,33,40,59,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,],[-34,58,-42,-35,-41,-23,-40,-25,-27,-28,-29,-30,-31,-32,-33,-24,-26,58,58,58,-43,-44,]),'ELSE':([87,],[90,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'program':([0,],[1,]),'progbody':([0,],[2,]),'func':([2,],[3,]),'args':([6,24,],[8,35,]),'funcbody':([11,69,70,77,],[13,71,72,78,]),'if':([13,71,72,78,],[16,16,16,16,]),'funcall':([13,25,71,72,78,],[17,38,17,17,17,]),'assign':([13,71,72,78,],[18,18,18,18,]),'while':([13,71,72,78,],[19,19,19,19,]),'return':([13,71,72,78,],[20,20,20,20,]),'expression':([23,25,26,27,32,34,45,51,],[28,37,39,41,52,53,61,66,]),'term':([23,25,26,27,32,34,43,44,45,47,48,51,],[30,30,30,30,30,30,58,60,30,62,63,30,]),'factor':([23,25,26,27,32,34,43,44,45,47,48,49,50,51,],[31,31,31,31,31,31,31,31,31,31,31,64,65,31,]),'elsebranch':([73,],[75,]),}
+_lr_goto_items = {'program':([0,],[1,]),'progbody':([0,],[2,]),'func':([2,],[3,]),'args':([6,24,],[8,35,]),'funcbody':([11,83,84,91,],[13,85,86,92,]),'if':([13,85,86,92,],[16,16,16,16,]),'funcall':([13,25,85,86,92,],[17,38,17,17,17,]),'assign':([13,85,86,92,],[18,18,18,18,]),'while':([13,85,86,92,],[19,19,19,19,]),'return':([13,85,86,92,],[20,20,20,20,]),'expression':([23,25,26,27,32,34,45,46,47,48,49,50,58,],[28,37,39,41,59,60,68,69,70,71,72,73,80,]),'term':([23,25,26,27,32,34,43,44,45,46,47,48,49,50,51,53,54,58,],[30,30,30,30,30,30,65,67,30,30,30,30,30,30,74,75,76,30,]),'factor':([23,25,26,27,32,34,43,44,45,46,47,48,49,50,51,53,54,55,56,57,58,],[31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,77,78,79,31,]),'elsebranch':([87,],[89,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,41 +27,48 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> program","S'",1,None,None,None),
-  ('program -> progbody func','program',2,'p_program','parse.py',26),
-  ('progbody -> <empty>','progbody',0,'p_progbody','parse.py',31),
-  ('progbody -> progbody func','progbody',2,'p_progbody','parse.py',32),
-  ('func -> DEF ID LBR args RBR LFBR funcbody RFBR','func',8,'p_func','parse.py',40),
-  ('args -> <empty>','args',0,'p_args','parse.py',45),
-  ('args -> ID','args',1,'p_args','parse.py',46),
-  ('args -> args COMMA ID','args',3,'p_args','parse.py',47),
-  ('funcbody -> <empty>','funcbody',0,'p_funcbody','parse.py',57),
-  ('funcbody -> funcbody if','funcbody',2,'p_funcbody','parse.py',58),
-  ('funcbody -> funcbody funcall','funcbody',2,'p_funcbody','parse.py',59),
-  ('funcbody -> funcbody assign','funcbody',2,'p_funcbody','parse.py',60),
-  ('funcbody -> funcbody while','funcbody',2,'p_funcbody','parse.py',61),
-  ('funcbody -> funcbody return','funcbody',2,'p_funcbody','parse.py',62),
-  ('assign -> ID ASSIGN expression SEMICOLON','assign',4,'p_assign','parse.py',70),
-  ('assign -> ID ASSIGN funcall','assign',3,'p_assign','parse.py',71),
-  ('funcall -> ID LBR args RBR SEMICOLON','funcall',5,'p_funcall','parse.py',76),
-  ('if -> IF LBR expression RBR LFBR funcbody RFBR elsebranch','if',8,'p_if','parse.py',81),
-  ('elsebranch -> <empty>','elsebranch',0,'p_elsebranch','parse.py',89),
-  ('elsebranch -> ELSE LFBR funcbody RFBR','elsebranch',4,'p_elsebranch','parse.py',90),
-  ('while -> WHILE LBR expression RBR LFBR funcbody RFBR','while',7,'p_while','parse.py',96),
-  ('return -> RETURN expression SEMICOLON','return',3,'p_return','parse.py',102),
-  ('return -> RETURN ID SEMICOLON','return',3,'p_return','parse.py',103),
-  ('expression -> expression PLUS term','expression',3,'p_expression_plus','parse.py',107),
-  ('expression -> ID PLUS term','expression',3,'p_expression_plus','parse.py',108),
-  ('expression -> expression SUB term','expression',3,'p_expression_sub','parse.py',113),
-  ('expression -> ID SUB term','expression',3,'p_expression_sub','parse.py',114),
-  ('expression -> expression COMPAR expression','expression',3,'p_expression_compar','parse.py',119),
-  ('expression -> term','expression',1,'p_expression_term','parse.py',123),
-  ('expression -> ID','expression',1,'p_expression_term','parse.py',124),
-  ('term -> term MULT factor','term',3,'p_term_times','parse.py',129),
-  ('term -> term DIV factor','term',3,'p_term_div','parse.py',134),
-  ('term -> factor','term',1,'p_term_factor','parse.py',139),
-  ('term -> ID','term',1,'p_term_factor','parse.py',140),
-  ('factor -> DEN expression','factor',2,'p_factor_bin','parse.py',144),
-  ('factor -> NUM','factor',1,'p_factor_num','parse.py',148),
-  ('factor -> factor POW expression','factor',3,'p_factor_pow','parse.py',152),
-  ('factor -> LBR expression RBR','factor',3,'p_factor_expr','parse.py',156),
+  ('program -> progbody func','program',2,'p_program','parse.py',29),
+  ('progbody -> <empty>','progbody',0,'p_progbody','parse.py',34),
+  ('progbody -> progbody func','progbody',2,'p_progbody','parse.py',35),
+  ('func -> DEF ID LBR args RBR LFBR funcbody RFBR','func',8,'p_func','parse.py',43),
+  ('args -> <empty>','args',0,'p_args','parse.py',48),
+  ('args -> ID','args',1,'p_args','parse.py',49),
+  ('args -> args COMMA ID','args',3,'p_args','parse.py',50),
+  ('funcbody -> <empty>','funcbody',0,'p_funcbody','parse.py',60),
+  ('funcbody -> funcbody if','funcbody',2,'p_funcbody','parse.py',61),
+  ('funcbody -> funcbody funcall','funcbody',2,'p_funcbody','parse.py',62),
+  ('funcbody -> funcbody assign','funcbody',2,'p_funcbody','parse.py',63),
+  ('funcbody -> funcbody while','funcbody',2,'p_funcbody','parse.py',64),
+  ('funcbody -> funcbody return','funcbody',2,'p_funcbody','parse.py',65),
+  ('assign -> ID ASSIGN expression SEMICOLON','assign',4,'p_assign','parse.py',73),
+  ('assign -> ID ASSIGN funcall','assign',3,'p_assign','parse.py',74),
+  ('funcall -> ID LBR args RBR SEMICOLON','funcall',5,'p_funcall','parse.py',79),
+  ('if -> IF LBR expression RBR LFBR funcbody RFBR elsebranch','if',8,'p_if','parse.py',84),
+  ('elsebranch -> <empty>','elsebranch',0,'p_elsebranch','parse.py',92),
+  ('elsebranch -> ELSE LFBR funcbody RFBR','elsebranch',4,'p_elsebranch','parse.py',93),
+  ('while -> WHILE LBR expression RBR LFBR funcbody RFBR','while',7,'p_while','parse.py',99),
+  ('return -> RETURN expression SEMICOLON','return',3,'p_return','parse.py',105),
+  ('return -> RETURN ID SEMICOLON','return',3,'p_return','parse.py',106),
+  ('expression -> expression PLUS term','expression',3,'p_expression_plus','parse.py',111),
+  ('expression -> ID PLUS term','expression',3,'p_expression_plus','parse.py',112),
+  ('expression -> expression SUB term','expression',3,'p_expression_sub','parse.py',117),
+  ('expression -> ID SUB term','expression',3,'p_expression_sub','parse.py',118),
+  ('expression -> expression MOREQ expression','expression',3,'p_expression_compar','parse.py',123),
+  ('expression -> expression LESEQ expression','expression',3,'p_expression_compar','parse.py',124),
+  ('expression -> expression LT expression','expression',3,'p_expression_compar','parse.py',125),
+  ('expression -> expression GT expression','expression',3,'p_expression_compar','parse.py',126),
+  ('expression -> expression EQ expression','expression',3,'p_expression_compar','parse.py',127),
+  ('expression -> expression NE expression','expression',3,'p_expression_compar','parse.py',128),
+  ('expression -> expression DIS term','expression',3,'p_expression_bin','parse.py',132),
+  ('expression -> term','expression',1,'p_expression_term','parse.py',136),
+  ('expression -> ID','expression',1,'p_expression_term','parse.py',137),
+  ('term -> term MULT factor','term',3,'p_term_times','parse.py',142),
+  ('term -> term CON factor','term',3,'p_term_bin','parse.py',146),
+  ('term -> term DIV factor','term',3,'p_term_div','parse.py',150),
+  ('term -> factor','term',1,'p_term_factor','parse.py',155),
+  ('term -> ID','term',1,'p_term_factor','parse.py',156),
+  ('factor -> DEN expression','factor',2,'p_factor_bin','parse.py',161),
+  ('factor -> NUM','factor',1,'p_factor_num','parse.py',166),
+  ('factor -> factor POW expression','factor',3,'p_factor_pow','parse.py',171),
+  ('factor -> LBR expression RBR','factor',3,'p_factor_expr','parse.py',176),
 ]
