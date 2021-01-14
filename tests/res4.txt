@@ -1,5 +1,4 @@
 def:
-	None
 	math:
 		args:
 			a

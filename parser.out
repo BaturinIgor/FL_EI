@@ -27,8 +27,8 @@ Rule 17    if -> IF LBR expression RBR LFBR funcbody RFBR elsebranch
 Rule 18    elsebranch -> <empty>
 Rule 19    elsebranch -> ELSE LFBR funcbody RFBR
 Rule 20    while -> WHILE LBR expression RBR LFBR funcbody RFBR
-Rule 21    return -> RETURN expression SEMICOLON
-Rule 22    return -> RETURN ID SEMICOLON
+Rule 21    return -> RETURN LBR expression RBR SEMICOLON
+Rule 22    return -> RETURN LBR ID RBR SEMICOLON
 Rule 23    expression -> expression PLUS term
 Rule 24    expression -> ID PLUS term
 Rule 25    expression -> expression SUB term
@@ -67,7 +67,7 @@ EQ                   : 31
 GT                   : 30
 ID                   : 4 6 7 14 15 16 22 24 26 35 40
 IF                   : 17
-LBR                  : 4 16 17 20 44
+LBR                  : 4 16 17 20 21 22 44
 LESEQ                : 28
 LFBR                 : 4 17 19 20
 LT                   : 29
@@ -77,7 +77,7 @@ NE                   : 32
 NUM                  : 42
 PLUS                 : 23 24
 POW                  : 43
-RBR                  : 4 16 17 20 44
+RBR                  : 4 16 17 20 21 22 44
 RETURN               : 21 22
 RFBR                 : 4 17 19 20
 SEMICOLON            : 14 16 21 22
@@ -238,8 +238,8 @@ state 13
     (14) assign -> . ID ASSIGN expression SEMICOLON
     (15) assign -> . ID ASSIGN funcall
     (20) while -> . WHILE LBR expression RBR LFBR funcbody RFBR
-    (21) return -> . RETURN expression SEMICOLON
-    (22) return -> . RETURN ID SEMICOLON
+    (21) return -> . RETURN LBR expression RBR SEMICOLON
+    (22) return -> . RETURN LBR ID RBR SEMICOLON
 
     RFBR            shift and go to state 15
     IF              shift and go to state 21
@@ -342,39 +342,11 @@ state 22
 
 state 23
 
-    (21) return -> RETURN . expression SEMICOLON
-    (22) return -> RETURN . ID SEMICOLON
-    (23) expression -> . expression PLUS term
-    (24) expression -> . ID PLUS term
-    (25) expression -> . expression SUB term
-    (26) expression -> . ID SUB term
-    (27) expression -> . expression MOREQ expression
-    (28) expression -> . expression LESEQ expression
-    (29) expression -> . expression LT expression
-    (30) expression -> . expression GT expression
-    (31) expression -> . expression EQ expression
-    (32) expression -> . expression NE expression
-    (33) expression -> . expression DIS term
-    (34) expression -> . term
-    (35) expression -> . ID
-    (36) term -> . term MULT factor
-    (37) term -> . term CON factor
-    (38) term -> . term DIV factor
-    (39) term -> . factor
-    (40) term -> . ID
-    (41) factor -> . DEN expression
-    (42) factor -> . NUM
-    (43) factor -> . factor POW expression
-    (44) factor -> . LBR expression RBR
+    (21) return -> RETURN . LBR expression RBR SEMICOLON
+    (22) return -> RETURN . LBR ID RBR SEMICOLON
 
-    ID              shift and go to state 29
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
-    LBR             shift and go to state 34
+    LBR             shift and go to state 28
 
-    expression                     shift and go to state 28
-    term                           shift and go to state 30
-    factor                         shift and go to state 31
 
 state 24
 
@@ -387,7 +359,7 @@ state 24
     COMMA           reduce using rule 5 (args -> .)
     ID              shift and go to state 7
 
-    args                           shift and go to state 35
+    args                           shift and go to state 29
 
 state 25
 
@@ -417,15 +389,15 @@ state 25
     (43) factor -> . factor POW expression
     (44) factor -> . LBR expression RBR
 
-    ID              shift and go to state 36
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
+    ID              shift and go to state 30
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
     LBR             shift and go to state 34
 
-    expression                     shift and go to state 37
-    funcall                        shift and go to state 38
-    term                           shift and go to state 30
-    factor                         shift and go to state 31
+    expression                     shift and go to state 31
+    funcall                        shift and go to state 32
+    term                           shift and go to state 33
+    factor                         shift and go to state 35
 
 state 26
 
@@ -453,14 +425,14 @@ state 26
     (43) factor -> . factor POW expression
     (44) factor -> . LBR expression RBR
 
-    ID              shift and go to state 40
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
+    ID              shift and go to state 39
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
     LBR             shift and go to state 34
 
-    expression                     shift and go to state 39
-    term                           shift and go to state 30
-    factor                         shift and go to state 31
+    expression                     shift and go to state 38
+    term                           shift and go to state 33
+    factor                         shift and go to state 35
 
 state 27
 
@@ -488,149 +460,19 @@ state 27
     (43) factor -> . factor POW expression
     (44) factor -> . LBR expression RBR
 
-    ID              shift and go to state 40
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
+    ID              shift and go to state 39
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
     LBR             shift and go to state 34
 
-    expression                     shift and go to state 41
-    term                           shift and go to state 30
-    factor                         shift and go to state 31
+    expression                     shift and go to state 40
+    term                           shift and go to state 33
+    factor                         shift and go to state 35
 
 state 28
 
-    (21) return -> RETURN expression . SEMICOLON
-    (23) expression -> expression . PLUS term
-    (25) expression -> expression . SUB term
-    (27) expression -> expression . MOREQ expression
-    (28) expression -> expression . LESEQ expression
-    (29) expression -> expression . LT expression
-    (30) expression -> expression . GT expression
-    (31) expression -> expression . EQ expression
-    (32) expression -> expression . NE expression
-    (33) expression -> expression . DIS term
-
-    SEMICOLON       shift and go to state 42
-    PLUS            shift and go to state 43
-    SUB             shift and go to state 44
-    MOREQ           shift and go to state 45
-    LESEQ           shift and go to state 46
-    LT              shift and go to state 47
-    GT              shift and go to state 48
-    EQ              shift and go to state 49
-    NE              shift and go to state 50
-    DIS             shift and go to state 51
-
-
-state 29
-
-    (22) return -> RETURN ID . SEMICOLON
-    (24) expression -> ID . PLUS term
-    (26) expression -> ID . SUB term
-    (35) expression -> ID .
-    (40) term -> ID .
-
-  ! shift/reduce conflict for SEMICOLON resolved as shift
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for SUB resolved as shift
-  ! shift/reduce conflict for SEMICOLON resolved as shift
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for SUB resolved as shift
-  ! reduce/reduce conflict for MOREQ resolved using rule 35 (expression -> ID .)
-  ! reduce/reduce conflict for LESEQ resolved using rule 35 (expression -> ID .)
-  ! reduce/reduce conflict for LT resolved using rule 35 (expression -> ID .)
-  ! reduce/reduce conflict for GT resolved using rule 35 (expression -> ID .)
-  ! reduce/reduce conflict for EQ resolved using rule 35 (expression -> ID .)
-  ! reduce/reduce conflict for NE resolved using rule 35 (expression -> ID .)
-  ! reduce/reduce conflict for DIS resolved using rule 35 (expression -> ID .)
-    SEMICOLON       shift and go to state 52
-    PLUS            shift and go to state 53
-    SUB             shift and go to state 54
-    MOREQ           reduce using rule 35 (expression -> ID .)
-    LESEQ           reduce using rule 35 (expression -> ID .)
-    LT              reduce using rule 35 (expression -> ID .)
-    GT              reduce using rule 35 (expression -> ID .)
-    EQ              reduce using rule 35 (expression -> ID .)
-    NE              reduce using rule 35 (expression -> ID .)
-    DIS             reduce using rule 35 (expression -> ID .)
-    MULT            reduce using rule 40 (term -> ID .)
-    CON             reduce using rule 40 (term -> ID .)
-    DIV             reduce using rule 40 (term -> ID .)
-
-  ! SEMICOLON       [ reduce using rule 35 (expression -> ID .) ]
-  ! PLUS            [ reduce using rule 35 (expression -> ID .) ]
-  ! SUB             [ reduce using rule 35 (expression -> ID .) ]
-  ! SEMICOLON       [ reduce using rule 40 (term -> ID .) ]
-  ! PLUS            [ reduce using rule 40 (term -> ID .) ]
-  ! SUB             [ reduce using rule 40 (term -> ID .) ]
-  ! MOREQ           [ reduce using rule 40 (term -> ID .) ]
-  ! LESEQ           [ reduce using rule 40 (term -> ID .) ]
-  ! LT              [ reduce using rule 40 (term -> ID .) ]
-  ! GT              [ reduce using rule 40 (term -> ID .) ]
-  ! EQ              [ reduce using rule 40 (term -> ID .) ]
-  ! NE              [ reduce using rule 40 (term -> ID .) ]
-  ! DIS             [ reduce using rule 40 (term -> ID .) ]
-
-
-state 30
-
-    (34) expression -> term .
-    (36) term -> term . MULT factor
-    (37) term -> term . CON factor
-    (38) term -> term . DIV factor
-
-  ! shift/reduce conflict for MULT resolved as shift
-  ! shift/reduce conflict for CON resolved as shift
-  ! shift/reduce conflict for DIV resolved as shift
-    SEMICOLON       reduce using rule 34 (expression -> term .)
-    PLUS            reduce using rule 34 (expression -> term .)
-    SUB             reduce using rule 34 (expression -> term .)
-    MOREQ           reduce using rule 34 (expression -> term .)
-    LESEQ           reduce using rule 34 (expression -> term .)
-    LT              reduce using rule 34 (expression -> term .)
-    GT              reduce using rule 34 (expression -> term .)
-    EQ              reduce using rule 34 (expression -> term .)
-    NE              reduce using rule 34 (expression -> term .)
-    DIS             reduce using rule 34 (expression -> term .)
-    RBR             reduce using rule 34 (expression -> term .)
-    POW             reduce using rule 34 (expression -> term .)
-    MULT            shift and go to state 55
-    CON             shift and go to state 56
-    DIV             shift and go to state 57
-
-  ! MULT            [ reduce using rule 34 (expression -> term .) ]
-  ! CON             [ reduce using rule 34 (expression -> term .) ]
-  ! DIV             [ reduce using rule 34 (expression -> term .) ]
-
-
-state 31
-
-    (39) term -> factor .
-    (43) factor -> factor . POW expression
-
-  ! shift/reduce conflict for POW resolved as shift
-    MULT            reduce using rule 39 (term -> factor .)
-    CON             reduce using rule 39 (term -> factor .)
-    DIV             reduce using rule 39 (term -> factor .)
-    SEMICOLON       reduce using rule 39 (term -> factor .)
-    PLUS            reduce using rule 39 (term -> factor .)
-    SUB             reduce using rule 39 (term -> factor .)
-    MOREQ           reduce using rule 39 (term -> factor .)
-    LESEQ           reduce using rule 39 (term -> factor .)
-    LT              reduce using rule 39 (term -> factor .)
-    GT              reduce using rule 39 (term -> factor .)
-    EQ              reduce using rule 39 (term -> factor .)
-    NE              reduce using rule 39 (term -> factor .)
-    DIS             reduce using rule 39 (term -> factor .)
-    RBR             reduce using rule 39 (term -> factor .)
-    POW             shift and go to state 58
-
-  ! POW             [ reduce using rule 39 (term -> factor .) ]
-
-
-state 32
-
-    (41) factor -> DEN . expression
+    (21) return -> RETURN LBR . expression RBR SEMICOLON
+    (22) return -> RETURN LBR . ID RBR SEMICOLON
     (23) expression -> . expression PLUS term
     (24) expression -> . ID PLUS term
     (25) expression -> . expression SUB term
@@ -654,34 +496,138 @@ state 32
     (43) factor -> . factor POW expression
     (44) factor -> . LBR expression RBR
 
-    ID              shift and go to state 40
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
+    ID              shift and go to state 42
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
     LBR             shift and go to state 34
 
-    expression                     shift and go to state 59
-    term                           shift and go to state 30
-    factor                         shift and go to state 31
+    expression                     shift and go to state 41
+    term                           shift and go to state 33
+    factor                         shift and go to state 35
+
+state 29
+
+    (16) funcall -> ID LBR args . RBR SEMICOLON
+    (7) args -> args . COMMA ID
+
+    RBR             shift and go to state 43
+    COMMA           shift and go to state 10
+
+
+state 30
+
+    (24) expression -> ID . PLUS term
+    (26) expression -> ID . SUB term
+    (35) expression -> ID .
+    (16) funcall -> ID . LBR args RBR SEMICOLON
+    (40) term -> ID .
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for SUB resolved as shift
+  ! reduce/reduce conflict for SEMICOLON resolved using rule 35 (expression -> ID .)
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for SUB resolved as shift
+  ! reduce/reduce conflict for MOREQ resolved using rule 35 (expression -> ID .)
+  ! reduce/reduce conflict for LESEQ resolved using rule 35 (expression -> ID .)
+  ! reduce/reduce conflict for LT resolved using rule 35 (expression -> ID .)
+  ! reduce/reduce conflict for GT resolved using rule 35 (expression -> ID .)
+  ! reduce/reduce conflict for EQ resolved using rule 35 (expression -> ID .)
+  ! reduce/reduce conflict for NE resolved using rule 35 (expression -> ID .)
+  ! reduce/reduce conflict for DIS resolved using rule 35 (expression -> ID .)
+    PLUS            shift and go to state 44
+    SUB             shift and go to state 45
+    SEMICOLON       reduce using rule 35 (expression -> ID .)
+    MOREQ           reduce using rule 35 (expression -> ID .)
+    LESEQ           reduce using rule 35 (expression -> ID .)
+    LT              reduce using rule 35 (expression -> ID .)
+    GT              reduce using rule 35 (expression -> ID .)
+    EQ              reduce using rule 35 (expression -> ID .)
+    NE              reduce using rule 35 (expression -> ID .)
+    DIS             reduce using rule 35 (expression -> ID .)
+    LBR             shift and go to state 24
+    MULT            reduce using rule 40 (term -> ID .)
+    CON             reduce using rule 40 (term -> ID .)
+    DIV             reduce using rule 40 (term -> ID .)
+
+  ! PLUS            [ reduce using rule 35 (expression -> ID .) ]
+  ! SUB             [ reduce using rule 35 (expression -> ID .) ]
+  ! SEMICOLON       [ reduce using rule 40 (term -> ID .) ]
+  ! PLUS            [ reduce using rule 40 (term -> ID .) ]
+  ! SUB             [ reduce using rule 40 (term -> ID .) ]
+  ! MOREQ           [ reduce using rule 40 (term -> ID .) ]
+  ! LESEQ           [ reduce using rule 40 (term -> ID .) ]
+  ! LT              [ reduce using rule 40 (term -> ID .) ]
+  ! GT              [ reduce using rule 40 (term -> ID .) ]
+  ! EQ              [ reduce using rule 40 (term -> ID .) ]
+  ! NE              [ reduce using rule 40 (term -> ID .) ]
+  ! DIS             [ reduce using rule 40 (term -> ID .) ]
+
+
+state 31
+
+    (14) assign -> ID ASSIGN expression . SEMICOLON
+    (23) expression -> expression . PLUS term
+    (25) expression -> expression . SUB term
+    (27) expression -> expression . MOREQ expression
+    (28) expression -> expression . LESEQ expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . GT expression
+    (31) expression -> expression . EQ expression
+    (32) expression -> expression . NE expression
+    (33) expression -> expression . DIS term
+
+    SEMICOLON       shift and go to state 46
+    PLUS            shift and go to state 47
+    SUB             shift and go to state 48
+    MOREQ           shift and go to state 49
+    LESEQ           shift and go to state 50
+    LT              shift and go to state 51
+    GT              shift and go to state 52
+    EQ              shift and go to state 53
+    NE              shift and go to state 54
+    DIS             shift and go to state 55
+
+
+state 32
+
+    (15) assign -> ID ASSIGN funcall .
+
+    RFBR            reduce using rule 15 (assign -> ID ASSIGN funcall .)
+    IF              reduce using rule 15 (assign -> ID ASSIGN funcall .)
+    ID              reduce using rule 15 (assign -> ID ASSIGN funcall .)
+    WHILE           reduce using rule 15 (assign -> ID ASSIGN funcall .)
+    RETURN          reduce using rule 15 (assign -> ID ASSIGN funcall .)
+
 
 state 33
 
-    (42) factor -> NUM .
+    (34) expression -> term .
+    (36) term -> term . MULT factor
+    (37) term -> term . CON factor
+    (38) term -> term . DIV factor
 
-    POW             reduce using rule 42 (factor -> NUM .)
-    MULT            reduce using rule 42 (factor -> NUM .)
-    CON             reduce using rule 42 (factor -> NUM .)
-    DIV             reduce using rule 42 (factor -> NUM .)
-    SEMICOLON       reduce using rule 42 (factor -> NUM .)
-    PLUS            reduce using rule 42 (factor -> NUM .)
-    SUB             reduce using rule 42 (factor -> NUM .)
-    MOREQ           reduce using rule 42 (factor -> NUM .)
-    LESEQ           reduce using rule 42 (factor -> NUM .)
-    LT              reduce using rule 42 (factor -> NUM .)
-    GT              reduce using rule 42 (factor -> NUM .)
-    EQ              reduce using rule 42 (factor -> NUM .)
-    NE              reduce using rule 42 (factor -> NUM .)
-    DIS             reduce using rule 42 (factor -> NUM .)
-    RBR             reduce using rule 42 (factor -> NUM .)
+  ! shift/reduce conflict for MULT resolved as shift
+  ! shift/reduce conflict for CON resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+    SEMICOLON       reduce using rule 34 (expression -> term .)
+    PLUS            reduce using rule 34 (expression -> term .)
+    SUB             reduce using rule 34 (expression -> term .)
+    MOREQ           reduce using rule 34 (expression -> term .)
+    LESEQ           reduce using rule 34 (expression -> term .)
+    LT              reduce using rule 34 (expression -> term .)
+    GT              reduce using rule 34 (expression -> term .)
+    EQ              reduce using rule 34 (expression -> term .)
+    NE              reduce using rule 34 (expression -> term .)
+    DIS             reduce using rule 34 (expression -> term .)
+    RBR             reduce using rule 34 (expression -> term .)
+    POW             reduce using rule 34 (expression -> term .)
+    MULT            shift and go to state 56
+    CON             shift and go to state 57
+    DIV             shift and go to state 58
+
+  ! MULT            [ reduce using rule 34 (expression -> term .) ]
+  ! CON             [ reduce using rule 34 (expression -> term .) ]
+  ! DIV             [ reduce using rule 34 (expression -> term .) ]
 
 
 state 34
@@ -710,110 +656,97 @@ state 34
     (43) factor -> . factor POW expression
     (44) factor -> . LBR expression RBR
 
-    ID              shift and go to state 40
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
+    ID              shift and go to state 39
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
     LBR             shift and go to state 34
 
-    expression                     shift and go to state 60
-    term                           shift and go to state 30
-    factor                         shift and go to state 31
+    expression                     shift and go to state 59
+    term                           shift and go to state 33
+    factor                         shift and go to state 35
 
 state 35
 
-    (16) funcall -> ID LBR args . RBR SEMICOLON
-    (7) args -> args . COMMA ID
+    (39) term -> factor .
+    (43) factor -> factor . POW expression
 
-    RBR             shift and go to state 61
-    COMMA           shift and go to state 10
+  ! shift/reduce conflict for POW resolved as shift
+    MULT            reduce using rule 39 (term -> factor .)
+    CON             reduce using rule 39 (term -> factor .)
+    DIV             reduce using rule 39 (term -> factor .)
+    SEMICOLON       reduce using rule 39 (term -> factor .)
+    PLUS            reduce using rule 39 (term -> factor .)
+    SUB             reduce using rule 39 (term -> factor .)
+    MOREQ           reduce using rule 39 (term -> factor .)
+    LESEQ           reduce using rule 39 (term -> factor .)
+    LT              reduce using rule 39 (term -> factor .)
+    GT              reduce using rule 39 (term -> factor .)
+    EQ              reduce using rule 39 (term -> factor .)
+    NE              reduce using rule 39 (term -> factor .)
+    DIS             reduce using rule 39 (term -> factor .)
+    RBR             reduce using rule 39 (term -> factor .)
+    POW             shift and go to state 60
+
+  ! POW             [ reduce using rule 39 (term -> factor .) ]
 
 
 state 36
 
-    (24) expression -> ID . PLUS term
-    (26) expression -> ID . SUB term
-    (35) expression -> ID .
-    (16) funcall -> ID . LBR args RBR SEMICOLON
-    (40) term -> ID .
+    (41) factor -> DEN . expression
+    (23) expression -> . expression PLUS term
+    (24) expression -> . ID PLUS term
+    (25) expression -> . expression SUB term
+    (26) expression -> . ID SUB term
+    (27) expression -> . expression MOREQ expression
+    (28) expression -> . expression LESEQ expression
+    (29) expression -> . expression LT expression
+    (30) expression -> . expression GT expression
+    (31) expression -> . expression EQ expression
+    (32) expression -> . expression NE expression
+    (33) expression -> . expression DIS term
+    (34) expression -> . term
+    (35) expression -> . ID
+    (36) term -> . term MULT factor
+    (37) term -> . term CON factor
+    (38) term -> . term DIV factor
+    (39) term -> . factor
+    (40) term -> . ID
+    (41) factor -> . DEN expression
+    (42) factor -> . NUM
+    (43) factor -> . factor POW expression
+    (44) factor -> . LBR expression RBR
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for SUB resolved as shift
-  ! reduce/reduce conflict for SEMICOLON resolved using rule 35 (expression -> ID .)
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for SUB resolved as shift
-  ! reduce/reduce conflict for MOREQ resolved using rule 35 (expression -> ID .)
-  ! reduce/reduce conflict for LESEQ resolved using rule 35 (expression -> ID .)
-  ! reduce/reduce conflict for LT resolved using rule 35 (expression -> ID .)
-  ! reduce/reduce conflict for GT resolved using rule 35 (expression -> ID .)
-  ! reduce/reduce conflict for EQ resolved using rule 35 (expression -> ID .)
-  ! reduce/reduce conflict for NE resolved using rule 35 (expression -> ID .)
-  ! reduce/reduce conflict for DIS resolved using rule 35 (expression -> ID .)
-    PLUS            shift and go to state 53
-    SUB             shift and go to state 54
-    SEMICOLON       reduce using rule 35 (expression -> ID .)
-    MOREQ           reduce using rule 35 (expression -> ID .)
-    LESEQ           reduce using rule 35 (expression -> ID .)
-    LT              reduce using rule 35 (expression -> ID .)
-    GT              reduce using rule 35 (expression -> ID .)
-    EQ              reduce using rule 35 (expression -> ID .)
-    NE              reduce using rule 35 (expression -> ID .)
-    DIS             reduce using rule 35 (expression -> ID .)
-    LBR             shift and go to state 24
-    MULT            reduce using rule 40 (term -> ID .)
-    CON             reduce using rule 40 (term -> ID .)
-    DIV             reduce using rule 40 (term -> ID .)
+    ID              shift and go to state 39
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
+    LBR             shift and go to state 34
 
-  ! PLUS            [ reduce using rule 35 (expression -> ID .) ]
-  ! SUB             [ reduce using rule 35 (expression -> ID .) ]
-  ! SEMICOLON       [ reduce using rule 40 (term -> ID .) ]
-  ! PLUS            [ reduce using rule 40 (term -> ID .) ]
-  ! SUB             [ reduce using rule 40 (term -> ID .) ]
-  ! MOREQ           [ reduce using rule 40 (term -> ID .) ]
-  ! LESEQ           [ reduce using rule 40 (term -> ID .) ]
-  ! LT              [ reduce using rule 40 (term -> ID .) ]
-  ! GT              [ reduce using rule 40 (term -> ID .) ]
-  ! EQ              [ reduce using rule 40 (term -> ID .) ]
-  ! NE              [ reduce using rule 40 (term -> ID .) ]
-  ! DIS             [ reduce using rule 40 (term -> ID .) ]
-
+    expression                     shift and go to state 61
+    term                           shift and go to state 33
+    factor                         shift and go to state 35
 
 state 37
 
-    (14) assign -> ID ASSIGN expression . SEMICOLON
-    (23) expression -> expression . PLUS term
-    (25) expression -> expression . SUB term
-    (27) expression -> expression . MOREQ expression
-    (28) expression -> expression . LESEQ expression
-    (29) expression -> expression . LT expression
-    (30) expression -> expression . GT expression
-    (31) expression -> expression . EQ expression
-    (32) expression -> expression . NE expression
-    (33) expression -> expression . DIS term
+    (42) factor -> NUM .
 
-    SEMICOLON       shift and go to state 62
-    PLUS            shift and go to state 43
-    SUB             shift and go to state 44
-    MOREQ           shift and go to state 45
-    LESEQ           shift and go to state 46
-    LT              shift and go to state 47
-    GT              shift and go to state 48
-    EQ              shift and go to state 49
-    NE              shift and go to state 50
-    DIS             shift and go to state 51
+    POW             reduce using rule 42 (factor -> NUM .)
+    MULT            reduce using rule 42 (factor -> NUM .)
+    CON             reduce using rule 42 (factor -> NUM .)
+    DIV             reduce using rule 42 (factor -> NUM .)
+    SEMICOLON       reduce using rule 42 (factor -> NUM .)
+    PLUS            reduce using rule 42 (factor -> NUM .)
+    SUB             reduce using rule 42 (factor -> NUM .)
+    MOREQ           reduce using rule 42 (factor -> NUM .)
+    LESEQ           reduce using rule 42 (factor -> NUM .)
+    LT              reduce using rule 42 (factor -> NUM .)
+    GT              reduce using rule 42 (factor -> NUM .)
+    EQ              reduce using rule 42 (factor -> NUM .)
+    NE              reduce using rule 42 (factor -> NUM .)
+    DIS             reduce using rule 42 (factor -> NUM .)
+    RBR             reduce using rule 42 (factor -> NUM .)
 
 
 state 38
-
-    (15) assign -> ID ASSIGN funcall .
-
-    RFBR            reduce using rule 15 (assign -> ID ASSIGN funcall .)
-    IF              reduce using rule 15 (assign -> ID ASSIGN funcall .)
-    ID              reduce using rule 15 (assign -> ID ASSIGN funcall .)
-    WHILE           reduce using rule 15 (assign -> ID ASSIGN funcall .)
-    RETURN          reduce using rule 15 (assign -> ID ASSIGN funcall .)
-
-
-state 39
 
     (17) if -> IF LBR expression . RBR LFBR funcbody RFBR elsebranch
     (23) expression -> expression . PLUS term
@@ -826,19 +759,19 @@ state 39
     (32) expression -> expression . NE expression
     (33) expression -> expression . DIS term
 
-    RBR             shift and go to state 63
-    PLUS            shift and go to state 43
-    SUB             shift and go to state 44
-    MOREQ           shift and go to state 45
-    LESEQ           shift and go to state 46
-    LT              shift and go to state 47
-    GT              shift and go to state 48
-    EQ              shift and go to state 49
-    NE              shift and go to state 50
-    DIS             shift and go to state 51
+    RBR             shift and go to state 62
+    PLUS            shift and go to state 47
+    SUB             shift and go to state 48
+    MOREQ           shift and go to state 49
+    LESEQ           shift and go to state 50
+    LT              shift and go to state 51
+    GT              shift and go to state 52
+    EQ              shift and go to state 53
+    NE              shift and go to state 54
+    DIS             shift and go to state 55
 
 
-state 40
+state 39
 
     (24) expression -> ID . PLUS term
     (26) expression -> ID . SUB term
@@ -862,8 +795,8 @@ state 40
   ! reduce/reduce conflict for DIS resolved using rule 35 (expression -> ID .)
   ! reduce/reduce conflict for POW resolved using rule 35 (expression -> ID .)
   ! reduce/reduce conflict for SEMICOLON resolved using rule 35 (expression -> ID .)
-    PLUS            shift and go to state 53
-    SUB             shift and go to state 54
+    PLUS            shift and go to state 44
+    SUB             shift and go to state 45
     RBR             reduce using rule 35 (expression -> ID .)
     MOREQ           reduce using rule 35 (expression -> ID .)
     LESEQ           reduce using rule 35 (expression -> ID .)
@@ -897,7 +830,7 @@ state 40
   ! SEMICOLON       [ reduce using rule 40 (term -> ID .) ]
 
 
-state 41
+state 40
 
     (20) while -> WHILE LBR expression . RBR LFBR funcbody RFBR
     (23) expression -> expression . PLUS term
@@ -910,30 +843,154 @@ state 41
     (32) expression -> expression . NE expression
     (33) expression -> expression . DIS term
 
+    RBR             shift and go to state 63
+    PLUS            shift and go to state 47
+    SUB             shift and go to state 48
+    MOREQ           shift and go to state 49
+    LESEQ           shift and go to state 50
+    LT              shift and go to state 51
+    GT              shift and go to state 52
+    EQ              shift and go to state 53
+    NE              shift and go to state 54
+    DIS             shift and go to state 55
+
+
+state 41
+
+    (21) return -> RETURN LBR expression . RBR SEMICOLON
+    (23) expression -> expression . PLUS term
+    (25) expression -> expression . SUB term
+    (27) expression -> expression . MOREQ expression
+    (28) expression -> expression . LESEQ expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . GT expression
+    (31) expression -> expression . EQ expression
+    (32) expression -> expression . NE expression
+    (33) expression -> expression . DIS term
+
     RBR             shift and go to state 64
-    PLUS            shift and go to state 43
-    SUB             shift and go to state 44
-    MOREQ           shift and go to state 45
-    LESEQ           shift and go to state 46
-    LT              shift and go to state 47
-    GT              shift and go to state 48
-    EQ              shift and go to state 49
-    NE              shift and go to state 50
-    DIS             shift and go to state 51
+    PLUS            shift and go to state 47
+    SUB             shift and go to state 48
+    MOREQ           shift and go to state 49
+    LESEQ           shift and go to state 50
+    LT              shift and go to state 51
+    GT              shift and go to state 52
+    EQ              shift and go to state 53
+    NE              shift and go to state 54
+    DIS             shift and go to state 55
 
 
 state 42
 
-    (21) return -> RETURN expression SEMICOLON .
+    (22) return -> RETURN LBR ID . RBR SEMICOLON
+    (24) expression -> ID . PLUS term
+    (26) expression -> ID . SUB term
+    (35) expression -> ID .
+    (40) term -> ID .
 
-    RFBR            reduce using rule 21 (return -> RETURN expression SEMICOLON .)
-    IF              reduce using rule 21 (return -> RETURN expression SEMICOLON .)
-    ID              reduce using rule 21 (return -> RETURN expression SEMICOLON .)
-    WHILE           reduce using rule 21 (return -> RETURN expression SEMICOLON .)
-    RETURN          reduce using rule 21 (return -> RETURN expression SEMICOLON .)
+  ! shift/reduce conflict for RBR resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for SUB resolved as shift
+  ! shift/reduce conflict for RBR resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for SUB resolved as shift
+  ! reduce/reduce conflict for MOREQ resolved using rule 35 (expression -> ID .)
+  ! reduce/reduce conflict for LESEQ resolved using rule 35 (expression -> ID .)
+  ! reduce/reduce conflict for LT resolved using rule 35 (expression -> ID .)
+  ! reduce/reduce conflict for GT resolved using rule 35 (expression -> ID .)
+  ! reduce/reduce conflict for EQ resolved using rule 35 (expression -> ID .)
+  ! reduce/reduce conflict for NE resolved using rule 35 (expression -> ID .)
+  ! reduce/reduce conflict for DIS resolved using rule 35 (expression -> ID .)
+    RBR             shift and go to state 65
+    PLUS            shift and go to state 44
+    SUB             shift and go to state 45
+    MOREQ           reduce using rule 35 (expression -> ID .)
+    LESEQ           reduce using rule 35 (expression -> ID .)
+    LT              reduce using rule 35 (expression -> ID .)
+    GT              reduce using rule 35 (expression -> ID .)
+    EQ              reduce using rule 35 (expression -> ID .)
+    NE              reduce using rule 35 (expression -> ID .)
+    DIS             reduce using rule 35 (expression -> ID .)
+    MULT            reduce using rule 40 (term -> ID .)
+    CON             reduce using rule 40 (term -> ID .)
+    DIV             reduce using rule 40 (term -> ID .)
+
+  ! RBR             [ reduce using rule 35 (expression -> ID .) ]
+  ! PLUS            [ reduce using rule 35 (expression -> ID .) ]
+  ! SUB             [ reduce using rule 35 (expression -> ID .) ]
+  ! RBR             [ reduce using rule 40 (term -> ID .) ]
+  ! PLUS            [ reduce using rule 40 (term -> ID .) ]
+  ! SUB             [ reduce using rule 40 (term -> ID .) ]
+  ! MOREQ           [ reduce using rule 40 (term -> ID .) ]
+  ! LESEQ           [ reduce using rule 40 (term -> ID .) ]
+  ! LT              [ reduce using rule 40 (term -> ID .) ]
+  ! GT              [ reduce using rule 40 (term -> ID .) ]
+  ! EQ              [ reduce using rule 40 (term -> ID .) ]
+  ! NE              [ reduce using rule 40 (term -> ID .) ]
+  ! DIS             [ reduce using rule 40 (term -> ID .) ]
 
 
 state 43
+
+    (16) funcall -> ID LBR args RBR . SEMICOLON
+
+    SEMICOLON       shift and go to state 66
+
+
+state 44
+
+    (24) expression -> ID PLUS . term
+    (36) term -> . term MULT factor
+    (37) term -> . term CON factor
+    (38) term -> . term DIV factor
+    (39) term -> . factor
+    (40) term -> . ID
+    (41) factor -> . DEN expression
+    (42) factor -> . NUM
+    (43) factor -> . factor POW expression
+    (44) factor -> . LBR expression RBR
+
+    ID              shift and go to state 67
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
+    LBR             shift and go to state 34
+
+    term                           shift and go to state 68
+    factor                         shift and go to state 35
+
+state 45
+
+    (26) expression -> ID SUB . term
+    (36) term -> . term MULT factor
+    (37) term -> . term CON factor
+    (38) term -> . term DIV factor
+    (39) term -> . factor
+    (40) term -> . ID
+    (41) factor -> . DEN expression
+    (42) factor -> . NUM
+    (43) factor -> . factor POW expression
+    (44) factor -> . LBR expression RBR
+
+    ID              shift and go to state 67
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
+    LBR             shift and go to state 34
+
+    term                           shift and go to state 69
+    factor                         shift and go to state 35
+
+state 46
+
+    (14) assign -> ID ASSIGN expression SEMICOLON .
+
+    RFBR            reduce using rule 14 (assign -> ID ASSIGN expression SEMICOLON .)
+    IF              reduce using rule 14 (assign -> ID ASSIGN expression SEMICOLON .)
+    ID              reduce using rule 14 (assign -> ID ASSIGN expression SEMICOLON .)
+    WHILE           reduce using rule 14 (assign -> ID ASSIGN expression SEMICOLON .)
+    RETURN          reduce using rule 14 (assign -> ID ASSIGN expression SEMICOLON .)
+
+
+state 47
 
     (23) expression -> expression PLUS . term
     (36) term -> . term MULT factor
@@ -946,15 +1003,15 @@ state 43
     (43) factor -> . factor POW expression
     (44) factor -> . LBR expression RBR
 
-    ID              shift and go to state 66
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
+    ID              shift and go to state 67
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
     LBR             shift and go to state 34
 
-    term                           shift and go to state 65
-    factor                         shift and go to state 31
+    term                           shift and go to state 70
+    factor                         shift and go to state 35
 
-state 44
+state 48
 
     (25) expression -> expression SUB . term
     (36) term -> . term MULT factor
@@ -967,15 +1024,15 @@ state 44
     (43) factor -> . factor POW expression
     (44) factor -> . LBR expression RBR
 
-    ID              shift and go to state 66
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
+    ID              shift and go to state 67
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
     LBR             shift and go to state 34
 
-    term                           shift and go to state 67
-    factor                         shift and go to state 31
+    term                           shift and go to state 71
+    factor                         shift and go to state 35
 
-state 45
+state 49
 
     (27) expression -> expression MOREQ . expression
     (23) expression -> . expression PLUS term
@@ -1001,16 +1058,16 @@ state 45
     (43) factor -> . factor POW expression
     (44) factor -> . LBR expression RBR
 
-    ID              shift and go to state 40
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
+    ID              shift and go to state 39
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
     LBR             shift and go to state 34
 
-    expression                     shift and go to state 68
-    term                           shift and go to state 30
-    factor                         shift and go to state 31
+    expression                     shift and go to state 72
+    term                           shift and go to state 33
+    factor                         shift and go to state 35
 
-state 46
+state 50
 
     (28) expression -> expression LESEQ . expression
     (23) expression -> . expression PLUS term
@@ -1036,16 +1093,16 @@ state 46
     (43) factor -> . factor POW expression
     (44) factor -> . LBR expression RBR
 
-    ID              shift and go to state 40
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
+    ID              shift and go to state 39
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
     LBR             shift and go to state 34
 
-    expression                     shift and go to state 69
-    term                           shift and go to state 30
-    factor                         shift and go to state 31
+    expression                     shift and go to state 73
+    term                           shift and go to state 33
+    factor                         shift and go to state 35
 
-state 47
+state 51
 
     (29) expression -> expression LT . expression
     (23) expression -> . expression PLUS term
@@ -1071,16 +1128,16 @@ state 47
     (43) factor -> . factor POW expression
     (44) factor -> . LBR expression RBR
 
-    ID              shift and go to state 40
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
+    ID              shift and go to state 39
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
     LBR             shift and go to state 34
 
-    expression                     shift and go to state 70
-    term                           shift and go to state 30
-    factor                         shift and go to state 31
+    expression                     shift and go to state 74
+    term                           shift and go to state 33
+    factor                         shift and go to state 35
 
-state 48
+state 52
 
     (30) expression -> expression GT . expression
     (23) expression -> . expression PLUS term
@@ -1106,16 +1163,16 @@ state 48
     (43) factor -> . factor POW expression
     (44) factor -> . LBR expression RBR
 
-    ID              shift and go to state 40
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
+    ID              shift and go to state 39
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
     LBR             shift and go to state 34
 
-    expression                     shift and go to state 71
-    term                           shift and go to state 30
-    factor                         shift and go to state 31
+    expression                     shift and go to state 75
+    term                           shift and go to state 33
+    factor                         shift and go to state 35
 
-state 49
+state 53
 
     (31) expression -> expression EQ . expression
     (23) expression -> . expression PLUS term
@@ -1141,16 +1198,16 @@ state 49
     (43) factor -> . factor POW expression
     (44) factor -> . LBR expression RBR
 
-    ID              shift and go to state 40
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
+    ID              shift and go to state 39
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
     LBR             shift and go to state 34
 
-    expression                     shift and go to state 72
-    term                           shift and go to state 30
-    factor                         shift and go to state 31
+    expression                     shift and go to state 76
+    term                           shift and go to state 33
+    factor                         shift and go to state 35
 
-state 50
+state 54
 
     (32) expression -> expression NE . expression
     (23) expression -> . expression PLUS term
@@ -1176,16 +1233,16 @@ state 50
     (43) factor -> . factor POW expression
     (44) factor -> . LBR expression RBR
 
-    ID              shift and go to state 40
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
+    ID              shift and go to state 39
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
     LBR             shift and go to state 34
 
-    expression                     shift and go to state 73
-    term                           shift and go to state 30
-    factor                         shift and go to state 31
+    expression                     shift and go to state 77
+    term                           shift and go to state 33
+    factor                         shift and go to state 35
 
-state 51
+state 55
 
     (33) expression -> expression DIS . term
     (36) term -> . term MULT factor
@@ -1198,68 +1255,15 @@ state 51
     (43) factor -> . factor POW expression
     (44) factor -> . LBR expression RBR
 
-    ID              shift and go to state 66
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
+    ID              shift and go to state 67
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
     LBR             shift and go to state 34
 
-    term                           shift and go to state 74
-    factor                         shift and go to state 31
+    term                           shift and go to state 78
+    factor                         shift and go to state 35
 
-state 52
-
-    (22) return -> RETURN ID SEMICOLON .
-
-    RFBR            reduce using rule 22 (return -> RETURN ID SEMICOLON .)
-    IF              reduce using rule 22 (return -> RETURN ID SEMICOLON .)
-    ID              reduce using rule 22 (return -> RETURN ID SEMICOLON .)
-    WHILE           reduce using rule 22 (return -> RETURN ID SEMICOLON .)
-    RETURN          reduce using rule 22 (return -> RETURN ID SEMICOLON .)
-
-
-state 53
-
-    (24) expression -> ID PLUS . term
-    (36) term -> . term MULT factor
-    (37) term -> . term CON factor
-    (38) term -> . term DIV factor
-    (39) term -> . factor
-    (40) term -> . ID
-    (41) factor -> . DEN expression
-    (42) factor -> . NUM
-    (43) factor -> . factor POW expression
-    (44) factor -> . LBR expression RBR
-
-    ID              shift and go to state 66
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
-    LBR             shift and go to state 34
-
-    term                           shift and go to state 75
-    factor                         shift and go to state 31
-
-state 54
-
-    (26) expression -> ID SUB . term
-    (36) term -> . term MULT factor
-    (37) term -> . term CON factor
-    (38) term -> . term DIV factor
-    (39) term -> . factor
-    (40) term -> . ID
-    (41) factor -> . DEN expression
-    (42) factor -> . NUM
-    (43) factor -> . factor POW expression
-    (44) factor -> . LBR expression RBR
-
-    ID              shift and go to state 66
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
-    LBR             shift and go to state 34
-
-    term                           shift and go to state 76
-    factor                         shift and go to state 31
-
-state 55
+state 56
 
     (36) term -> term MULT . factor
     (41) factor -> . DEN expression
@@ -1267,13 +1271,13 @@ state 55
     (43) factor -> . factor POW expression
     (44) factor -> . LBR expression RBR
 
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
     LBR             shift and go to state 34
 
-    factor                         shift and go to state 77
+    factor                         shift and go to state 79
 
-state 56
+state 57
 
     (37) term -> term CON . factor
     (41) factor -> . DEN expression
@@ -1281,13 +1285,13 @@ state 56
     (43) factor -> . factor POW expression
     (44) factor -> . LBR expression RBR
 
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
     LBR             shift and go to state 34
 
-    factor                         shift and go to state 78
+    factor                         shift and go to state 80
 
-state 57
+state 58
 
     (38) term -> term DIV . factor
     (41) factor -> . DEN expression
@@ -1295,13 +1299,38 @@ state 57
     (43) factor -> . factor POW expression
     (44) factor -> . LBR expression RBR
 
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
     LBR             shift and go to state 34
 
-    factor                         shift and go to state 79
+    factor                         shift and go to state 81
 
-state 58
+state 59
+
+    (44) factor -> LBR expression . RBR
+    (23) expression -> expression . PLUS term
+    (25) expression -> expression . SUB term
+    (27) expression -> expression . MOREQ expression
+    (28) expression -> expression . LESEQ expression
+    (29) expression -> expression . LT expression
+    (30) expression -> expression . GT expression
+    (31) expression -> expression . EQ expression
+    (32) expression -> expression . NE expression
+    (33) expression -> expression . DIS term
+
+    RBR             shift and go to state 82
+    PLUS            shift and go to state 47
+    SUB             shift and go to state 48
+    MOREQ           shift and go to state 49
+    LESEQ           shift and go to state 50
+    LT              shift and go to state 51
+    GT              shift and go to state 52
+    EQ              shift and go to state 53
+    NE              shift and go to state 54
+    DIS             shift and go to state 55
+
+
+state 60
 
     (43) factor -> factor POW . expression
     (23) expression -> . expression PLUS term
@@ -1327,16 +1356,16 @@ state 58
     (43) factor -> . factor POW expression
     (44) factor -> . LBR expression RBR
 
-    ID              shift and go to state 40
-    DEN             shift and go to state 32
-    NUM             shift and go to state 33
+    ID              shift and go to state 39
+    DEN             shift and go to state 36
+    NUM             shift and go to state 37
     LBR             shift and go to state 34
 
-    factor                         shift and go to state 31
-    expression                     shift and go to state 80
-    term                           shift and go to state 30
+    factor                         shift and go to state 35
+    expression                     shift and go to state 83
+    term                           shift and go to state 33
 
-state 59
+state 61
 
     (41) factor -> DEN expression .
     (23) expression -> expression . PLUS term
@@ -1364,15 +1393,15 @@ state 59
     DIV             reduce using rule 41 (factor -> DEN expression .)
     SEMICOLON       reduce using rule 41 (factor -> DEN expression .)
     RBR             reduce using rule 41 (factor -> DEN expression .)
-    PLUS            shift and go to state 43
-    SUB             shift and go to state 44
-    MOREQ           shift and go to state 45
-    LESEQ           shift and go to state 46
-    LT              shift and go to state 47
-    GT              shift and go to state 48
-    EQ              shift and go to state 49
-    NE              shift and go to state 50
-    DIS             shift and go to state 51
+    PLUS            shift and go to state 47
+    SUB             shift and go to state 48
+    MOREQ           shift and go to state 49
+    LESEQ           shift and go to state 50
+    LT              shift and go to state 51
+    GT              shift and go to state 52
+    EQ              shift and go to state 53
+    NE              shift and go to state 54
+    DIS             shift and go to state 55
 
   ! PLUS            [ reduce using rule 41 (factor -> DEN expression .) ]
   ! SUB             [ reduce using rule 41 (factor -> DEN expression .) ]
@@ -1385,64 +1414,129 @@ state 59
   ! DIS             [ reduce using rule 41 (factor -> DEN expression .) ]
 
 
-state 60
-
-    (44) factor -> LBR expression . RBR
-    (23) expression -> expression . PLUS term
-    (25) expression -> expression . SUB term
-    (27) expression -> expression . MOREQ expression
-    (28) expression -> expression . LESEQ expression
-    (29) expression -> expression . LT expression
-    (30) expression -> expression . GT expression
-    (31) expression -> expression . EQ expression
-    (32) expression -> expression . NE expression
-    (33) expression -> expression . DIS term
-
-    RBR             shift and go to state 81
-    PLUS            shift and go to state 43
-    SUB             shift and go to state 44
-    MOREQ           shift and go to state 45
-    LESEQ           shift and go to state 46
-    LT              shift and go to state 47
-    GT              shift and go to state 48
-    EQ              shift and go to state 49
-    NE              shift and go to state 50
-    DIS             shift and go to state 51
-
-
-state 61
-
-    (16) funcall -> ID LBR args RBR . SEMICOLON
-
-    SEMICOLON       shift and go to state 82
-
-
 state 62
 
-    (14) assign -> ID ASSIGN expression SEMICOLON .
-
-    RFBR            reduce using rule 14 (assign -> ID ASSIGN expression SEMICOLON .)
-    IF              reduce using rule 14 (assign -> ID ASSIGN expression SEMICOLON .)
-    ID              reduce using rule 14 (assign -> ID ASSIGN expression SEMICOLON .)
-    WHILE           reduce using rule 14 (assign -> ID ASSIGN expression SEMICOLON .)
-    RETURN          reduce using rule 14 (assign -> ID ASSIGN expression SEMICOLON .)
-
-
-state 63
-
     (17) if -> IF LBR expression RBR . LFBR funcbody RFBR elsebranch
-
-    LFBR            shift and go to state 83
-
-
-state 64
-
-    (20) while -> WHILE LBR expression RBR . LFBR funcbody RFBR
 
     LFBR            shift and go to state 84
 
 
+state 63
+
+    (20) while -> WHILE LBR expression RBR . LFBR funcbody RFBR
+
+    LFBR            shift and go to state 85
+
+
+state 64
+
+    (21) return -> RETURN LBR expression RBR . SEMICOLON
+
+    SEMICOLON       shift and go to state 86
+
+
 state 65
+
+    (22) return -> RETURN LBR ID RBR . SEMICOLON
+
+    SEMICOLON       shift and go to state 87
+
+
+state 66
+
+    (16) funcall -> ID LBR args RBR SEMICOLON .
+
+    RFBR            reduce using rule 16 (funcall -> ID LBR args RBR SEMICOLON .)
+    IF              reduce using rule 16 (funcall -> ID LBR args RBR SEMICOLON .)
+    ID              reduce using rule 16 (funcall -> ID LBR args RBR SEMICOLON .)
+    WHILE           reduce using rule 16 (funcall -> ID LBR args RBR SEMICOLON .)
+    RETURN          reduce using rule 16 (funcall -> ID LBR args RBR SEMICOLON .)
+
+
+state 67
+
+    (40) term -> ID .
+
+    PLUS            reduce using rule 40 (term -> ID .)
+    SUB             reduce using rule 40 (term -> ID .)
+    MOREQ           reduce using rule 40 (term -> ID .)
+    LESEQ           reduce using rule 40 (term -> ID .)
+    LT              reduce using rule 40 (term -> ID .)
+    GT              reduce using rule 40 (term -> ID .)
+    EQ              reduce using rule 40 (term -> ID .)
+    NE              reduce using rule 40 (term -> ID .)
+    DIS             reduce using rule 40 (term -> ID .)
+    POW             reduce using rule 40 (term -> ID .)
+    MULT            reduce using rule 40 (term -> ID .)
+    CON             reduce using rule 40 (term -> ID .)
+    DIV             reduce using rule 40 (term -> ID .)
+    SEMICOLON       reduce using rule 40 (term -> ID .)
+    RBR             reduce using rule 40 (term -> ID .)
+
+
+state 68
+
+    (24) expression -> ID PLUS term .
+    (36) term -> term . MULT factor
+    (37) term -> term . CON factor
+    (38) term -> term . DIV factor
+
+  ! shift/reduce conflict for MULT resolved as shift
+  ! shift/reduce conflict for CON resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+    SEMICOLON       reduce using rule 24 (expression -> ID PLUS term .)
+    PLUS            reduce using rule 24 (expression -> ID PLUS term .)
+    SUB             reduce using rule 24 (expression -> ID PLUS term .)
+    MOREQ           reduce using rule 24 (expression -> ID PLUS term .)
+    LESEQ           reduce using rule 24 (expression -> ID PLUS term .)
+    LT              reduce using rule 24 (expression -> ID PLUS term .)
+    GT              reduce using rule 24 (expression -> ID PLUS term .)
+    EQ              reduce using rule 24 (expression -> ID PLUS term .)
+    NE              reduce using rule 24 (expression -> ID PLUS term .)
+    DIS             reduce using rule 24 (expression -> ID PLUS term .)
+    RBR             reduce using rule 24 (expression -> ID PLUS term .)
+    POW             reduce using rule 24 (expression -> ID PLUS term .)
+    MULT            shift and go to state 56
+    CON             shift and go to state 57
+    DIV             shift and go to state 58
+
+  ! MULT            [ reduce using rule 24 (expression -> ID PLUS term .) ]
+  ! CON             [ reduce using rule 24 (expression -> ID PLUS term .) ]
+  ! DIV             [ reduce using rule 24 (expression -> ID PLUS term .) ]
+
+
+state 69
+
+    (26) expression -> ID SUB term .
+    (36) term -> term . MULT factor
+    (37) term -> term . CON factor
+    (38) term -> term . DIV factor
+
+  ! shift/reduce conflict for MULT resolved as shift
+  ! shift/reduce conflict for CON resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+    SEMICOLON       reduce using rule 26 (expression -> ID SUB term .)
+    PLUS            reduce using rule 26 (expression -> ID SUB term .)
+    SUB             reduce using rule 26 (expression -> ID SUB term .)
+    MOREQ           reduce using rule 26 (expression -> ID SUB term .)
+    LESEQ           reduce using rule 26 (expression -> ID SUB term .)
+    LT              reduce using rule 26 (expression -> ID SUB term .)
+    GT              reduce using rule 26 (expression -> ID SUB term .)
+    EQ              reduce using rule 26 (expression -> ID SUB term .)
+    NE              reduce using rule 26 (expression -> ID SUB term .)
+    DIS             reduce using rule 26 (expression -> ID SUB term .)
+    RBR             reduce using rule 26 (expression -> ID SUB term .)
+    POW             reduce using rule 26 (expression -> ID SUB term .)
+    MULT            shift and go to state 56
+    CON             shift and go to state 57
+    DIV             shift and go to state 58
+
+  ! MULT            [ reduce using rule 26 (expression -> ID SUB term .) ]
+  ! CON             [ reduce using rule 26 (expression -> ID SUB term .) ]
+  ! DIV             [ reduce using rule 26 (expression -> ID SUB term .) ]
+
+
+state 70
 
     (23) expression -> expression PLUS term .
     (36) term -> term . MULT factor
@@ -1464,37 +1558,16 @@ state 65
     DIS             reduce using rule 23 (expression -> expression PLUS term .)
     RBR             reduce using rule 23 (expression -> expression PLUS term .)
     POW             reduce using rule 23 (expression -> expression PLUS term .)
-    MULT            shift and go to state 55
-    CON             shift and go to state 56
-    DIV             shift and go to state 57
+    MULT            shift and go to state 56
+    CON             shift and go to state 57
+    DIV             shift and go to state 58
 
   ! MULT            [ reduce using rule 23 (expression -> expression PLUS term .) ]
   ! CON             [ reduce using rule 23 (expression -> expression PLUS term .) ]
   ! DIV             [ reduce using rule 23 (expression -> expression PLUS term .) ]
 
 
-state 66
-
-    (40) term -> ID .
-
-    PLUS            reduce using rule 40 (term -> ID .)
-    SUB             reduce using rule 40 (term -> ID .)
-    MOREQ           reduce using rule 40 (term -> ID .)
-    LESEQ           reduce using rule 40 (term -> ID .)
-    LT              reduce using rule 40 (term -> ID .)
-    GT              reduce using rule 40 (term -> ID .)
-    EQ              reduce using rule 40 (term -> ID .)
-    NE              reduce using rule 40 (term -> ID .)
-    DIS             reduce using rule 40 (term -> ID .)
-    POW             reduce using rule 40 (term -> ID .)
-    MULT            reduce using rule 40 (term -> ID .)
-    CON             reduce using rule 40 (term -> ID .)
-    DIV             reduce using rule 40 (term -> ID .)
-    SEMICOLON       reduce using rule 40 (term -> ID .)
-    RBR             reduce using rule 40 (term -> ID .)
-
-
-state 67
+state 71
 
     (25) expression -> expression SUB term .
     (36) term -> term . MULT factor
@@ -1516,16 +1589,16 @@ state 67
     DIS             reduce using rule 25 (expression -> expression SUB term .)
     RBR             reduce using rule 25 (expression -> expression SUB term .)
     POW             reduce using rule 25 (expression -> expression SUB term .)
-    MULT            shift and go to state 55
-    CON             shift and go to state 56
-    DIV             shift and go to state 57
+    MULT            shift and go to state 56
+    CON             shift and go to state 57
+    DIV             shift and go to state 58
 
   ! MULT            [ reduce using rule 25 (expression -> expression SUB term .) ]
   ! CON             [ reduce using rule 25 (expression -> expression SUB term .) ]
   ! DIV             [ reduce using rule 25 (expression -> expression SUB term .) ]
 
 
-state 68
+state 72
 
     (27) expression -> expression MOREQ expression .
     (23) expression -> expression . PLUS term
@@ -1553,15 +1626,15 @@ state 68
     MULT            reduce using rule 27 (expression -> expression MOREQ expression .)
     CON             reduce using rule 27 (expression -> expression MOREQ expression .)
     DIV             reduce using rule 27 (expression -> expression MOREQ expression .)
-    PLUS            shift and go to state 43
-    SUB             shift and go to state 44
-    MOREQ           shift and go to state 45
-    LESEQ           shift and go to state 46
-    LT              shift and go to state 47
-    GT              shift and go to state 48
-    EQ              shift and go to state 49
-    NE              shift and go to state 50
-    DIS             shift and go to state 51
+    PLUS            shift and go to state 47
+    SUB             shift and go to state 48
+    MOREQ           shift and go to state 49
+    LESEQ           shift and go to state 50
+    LT              shift and go to state 51
+    GT              shift and go to state 52
+    EQ              shift and go to state 53
+    NE              shift and go to state 54
+    DIS             shift and go to state 55
 
   ! PLUS            [ reduce using rule 27 (expression -> expression MOREQ expression .) ]
   ! SUB             [ reduce using rule 27 (expression -> expression MOREQ expression .) ]
@@ -1574,7 +1647,7 @@ state 68
   ! DIS             [ reduce using rule 27 (expression -> expression MOREQ expression .) ]
 
 
-state 69
+state 73
 
     (28) expression -> expression LESEQ expression .
     (23) expression -> expression . PLUS term
@@ -1602,15 +1675,15 @@ state 69
     MULT            reduce using rule 28 (expression -> expression LESEQ expression .)
     CON             reduce using rule 28 (expression -> expression LESEQ expression .)
     DIV             reduce using rule 28 (expression -> expression LESEQ expression .)
-    PLUS            shift and go to state 43
-    SUB             shift and go to state 44
-    MOREQ           shift and go to state 45
-    LESEQ           shift and go to state 46
-    LT              shift and go to state 47
-    GT              shift and go to state 48
-    EQ              shift and go to state 49
-    NE              shift and go to state 50
-    DIS             shift and go to state 51
+    PLUS            shift and go to state 47
+    SUB             shift and go to state 48
+    MOREQ           shift and go to state 49
+    LESEQ           shift and go to state 50
+    LT              shift and go to state 51
+    GT              shift and go to state 52
+    EQ              shift and go to state 53
+    NE              shift and go to state 54
+    DIS             shift and go to state 55
 
   ! PLUS            [ reduce using rule 28 (expression -> expression LESEQ expression .) ]
   ! SUB             [ reduce using rule 28 (expression -> expression LESEQ expression .) ]
@@ -1623,7 +1696,7 @@ state 69
   ! DIS             [ reduce using rule 28 (expression -> expression LESEQ expression .) ]
 
 
-state 70
+state 74
 
     (29) expression -> expression LT expression .
     (23) expression -> expression . PLUS term
@@ -1651,15 +1724,15 @@ state 70
     MULT            reduce using rule 29 (expression -> expression LT expression .)
     CON             reduce using rule 29 (expression -> expression LT expression .)
     DIV             reduce using rule 29 (expression -> expression LT expression .)
-    PLUS            shift and go to state 43
-    SUB             shift and go to state 44
-    MOREQ           shift and go to state 45
-    LESEQ           shift and go to state 46
-    LT              shift and go to state 47
-    GT              shift and go to state 48
-    EQ              shift and go to state 49
-    NE              shift and go to state 50
-    DIS             shift and go to state 51
+    PLUS            shift and go to state 47
+    SUB             shift and go to state 48
+    MOREQ           shift and go to state 49
+    LESEQ           shift and go to state 50
+    LT              shift and go to state 51
+    GT              shift and go to state 52
+    EQ              shift and go to state 53
+    NE              shift and go to state 54
+    DIS             shift and go to state 55
 
   ! PLUS            [ reduce using rule 29 (expression -> expression LT expression .) ]
   ! SUB             [ reduce using rule 29 (expression -> expression LT expression .) ]
@@ -1672,7 +1745,7 @@ state 70
   ! DIS             [ reduce using rule 29 (expression -> expression LT expression .) ]
 
 
-state 71
+state 75
 
     (30) expression -> expression GT expression .
     (23) expression -> expression . PLUS term
@@ -1700,15 +1773,15 @@ state 71
     MULT            reduce using rule 30 (expression -> expression GT expression .)
     CON             reduce using rule 30 (expression -> expression GT expression .)
     DIV             reduce using rule 30 (expression -> expression GT expression .)
-    PLUS            shift and go to state 43
-    SUB             shift and go to state 44
-    MOREQ           shift and go to state 45
-    LESEQ           shift and go to state 46
-    LT              shift and go to state 47
-    GT              shift and go to state 48
-    EQ              shift and go to state 49
-    NE              shift and go to state 50
-    DIS             shift and go to state 51
+    PLUS            shift and go to state 47
+    SUB             shift and go to state 48
+    MOREQ           shift and go to state 49
+    LESEQ           shift and go to state 50
+    LT              shift and go to state 51
+    GT              shift and go to state 52
+    EQ              shift and go to state 53
+    NE              shift and go to state 54
+    DIS             shift and go to state 55
 
   ! PLUS            [ reduce using rule 30 (expression -> expression GT expression .) ]
   ! SUB             [ reduce using rule 30 (expression -> expression GT expression .) ]
@@ -1721,7 +1794,7 @@ state 71
   ! DIS             [ reduce using rule 30 (expression -> expression GT expression .) ]
 
 
-state 72
+state 76
 
     (31) expression -> expression EQ expression .
     (23) expression -> expression . PLUS term
@@ -1749,15 +1822,15 @@ state 72
     MULT            reduce using rule 31 (expression -> expression EQ expression .)
     CON             reduce using rule 31 (expression -> expression EQ expression .)
     DIV             reduce using rule 31 (expression -> expression EQ expression .)
-    PLUS            shift and go to state 43
-    SUB             shift and go to state 44
-    MOREQ           shift and go to state 45
-    LESEQ           shift and go to state 46
-    LT              shift and go to state 47
-    GT              shift and go to state 48
-    EQ              shift and go to state 49
-    NE              shift and go to state 50
-    DIS             shift and go to state 51
+    PLUS            shift and go to state 47
+    SUB             shift and go to state 48
+    MOREQ           shift and go to state 49
+    LESEQ           shift and go to state 50
+    LT              shift and go to state 51
+    GT              shift and go to state 52
+    EQ              shift and go to state 53
+    NE              shift and go to state 54
+    DIS             shift and go to state 55
 
   ! PLUS            [ reduce using rule 31 (expression -> expression EQ expression .) ]
   ! SUB             [ reduce using rule 31 (expression -> expression EQ expression .) ]
@@ -1770,7 +1843,7 @@ state 72
   ! DIS             [ reduce using rule 31 (expression -> expression EQ expression .) ]
 
 
-state 73
+state 77
 
     (32) expression -> expression NE expression .
     (23) expression -> expression . PLUS term
@@ -1798,15 +1871,15 @@ state 73
     MULT            reduce using rule 32 (expression -> expression NE expression .)
     CON             reduce using rule 32 (expression -> expression NE expression .)
     DIV             reduce using rule 32 (expression -> expression NE expression .)
-    PLUS            shift and go to state 43
-    SUB             shift and go to state 44
-    MOREQ           shift and go to state 45
-    LESEQ           shift and go to state 46
-    LT              shift and go to state 47
-    GT              shift and go to state 48
-    EQ              shift and go to state 49
-    NE              shift and go to state 50
-    DIS             shift and go to state 51
+    PLUS            shift and go to state 47
+    SUB             shift and go to state 48
+    MOREQ           shift and go to state 49
+    LESEQ           shift and go to state 50
+    LT              shift and go to state 51
+    GT              shift and go to state 52
+    EQ              shift and go to state 53
+    NE              shift and go to state 54
+    DIS             shift and go to state 55
 
   ! PLUS            [ reduce using rule 32 (expression -> expression NE expression .) ]
   ! SUB             [ reduce using rule 32 (expression -> expression NE expression .) ]
@@ -1819,7 +1892,7 @@ state 73
   ! DIS             [ reduce using rule 32 (expression -> expression NE expression .) ]
 
 
-state 74
+state 78
 
     (33) expression -> expression DIS term .
     (36) term -> term . MULT factor
@@ -1841,78 +1914,16 @@ state 74
     DIS             reduce using rule 33 (expression -> expression DIS term .)
     RBR             reduce using rule 33 (expression -> expression DIS term .)
     POW             reduce using rule 33 (expression -> expression DIS term .)
-    MULT            shift and go to state 55
-    CON             shift and go to state 56
-    DIV             shift and go to state 57
+    MULT            shift and go to state 56
+    CON             shift and go to state 57
+    DIV             shift and go to state 58
 
   ! MULT            [ reduce using rule 33 (expression -> expression DIS term .) ]
   ! CON             [ reduce using rule 33 (expression -> expression DIS term .) ]
   ! DIV             [ reduce using rule 33 (expression -> expression DIS term .) ]
 
 
-state 75
-
-    (24) expression -> ID PLUS term .
-    (36) term -> term . MULT factor
-    (37) term -> term . CON factor
-    (38) term -> term . DIV factor
-
-  ! shift/reduce conflict for MULT resolved as shift
-  ! shift/reduce conflict for CON resolved as shift
-  ! shift/reduce conflict for DIV resolved as shift
-    SEMICOLON       reduce using rule 24 (expression -> ID PLUS term .)
-    PLUS            reduce using rule 24 (expression -> ID PLUS term .)
-    SUB             reduce using rule 24 (expression -> ID PLUS term .)
-    MOREQ           reduce using rule 24 (expression -> ID PLUS term .)
-    LESEQ           reduce using rule 24 (expression -> ID PLUS term .)
-    LT              reduce using rule 24 (expression -> ID PLUS term .)
-    GT              reduce using rule 24 (expression -> ID PLUS term .)
-    EQ              reduce using rule 24 (expression -> ID PLUS term .)
-    NE              reduce using rule 24 (expression -> ID PLUS term .)
-    DIS             reduce using rule 24 (expression -> ID PLUS term .)
-    RBR             reduce using rule 24 (expression -> ID PLUS term .)
-    POW             reduce using rule 24 (expression -> ID PLUS term .)
-    MULT            shift and go to state 55
-    CON             shift and go to state 56
-    DIV             shift and go to state 57
-
-  ! MULT            [ reduce using rule 24 (expression -> ID PLUS term .) ]
-  ! CON             [ reduce using rule 24 (expression -> ID PLUS term .) ]
-  ! DIV             [ reduce using rule 24 (expression -> ID PLUS term .) ]
-
-
-state 76
-
-    (26) expression -> ID SUB term .
-    (36) term -> term . MULT factor
-    (37) term -> term . CON factor
-    (38) term -> term . DIV factor
-
-  ! shift/reduce conflict for MULT resolved as shift
-  ! shift/reduce conflict for CON resolved as shift
-  ! shift/reduce conflict for DIV resolved as shift
-    SEMICOLON       reduce using rule 26 (expression -> ID SUB term .)
-    PLUS            reduce using rule 26 (expression -> ID SUB term .)
-    SUB             reduce using rule 26 (expression -> ID SUB term .)
-    MOREQ           reduce using rule 26 (expression -> ID SUB term .)
-    LESEQ           reduce using rule 26 (expression -> ID SUB term .)
-    LT              reduce using rule 26 (expression -> ID SUB term .)
-    GT              reduce using rule 26 (expression -> ID SUB term .)
-    EQ              reduce using rule 26 (expression -> ID SUB term .)
-    NE              reduce using rule 26 (expression -> ID SUB term .)
-    DIS             reduce using rule 26 (expression -> ID SUB term .)
-    RBR             reduce using rule 26 (expression -> ID SUB term .)
-    POW             reduce using rule 26 (expression -> ID SUB term .)
-    MULT            shift and go to state 55
-    CON             shift and go to state 56
-    DIV             shift and go to state 57
-
-  ! MULT            [ reduce using rule 26 (expression -> ID SUB term .) ]
-  ! CON             [ reduce using rule 26 (expression -> ID SUB term .) ]
-  ! DIV             [ reduce using rule 26 (expression -> ID SUB term .) ]
-
-
-state 77
+state 79
 
     (36) term -> term MULT factor .
     (43) factor -> factor . POW expression
@@ -1932,12 +1943,12 @@ state 77
     NE              reduce using rule 36 (term -> term MULT factor .)
     DIS             reduce using rule 36 (term -> term MULT factor .)
     RBR             reduce using rule 36 (term -> term MULT factor .)
-    POW             shift and go to state 58
+    POW             shift and go to state 60
 
   ! POW             [ reduce using rule 36 (term -> term MULT factor .) ]
 
 
-state 78
+state 80
 
     (37) term -> term CON factor .
     (43) factor -> factor . POW expression
@@ -1957,12 +1968,12 @@ state 78
     NE              reduce using rule 37 (term -> term CON factor .)
     DIS             reduce using rule 37 (term -> term CON factor .)
     RBR             reduce using rule 37 (term -> term CON factor .)
-    POW             shift and go to state 58
+    POW             shift and go to state 60
 
   ! POW             [ reduce using rule 37 (term -> term CON factor .) ]
 
 
-state 79
+state 81
 
     (38) term -> term DIV factor .
     (43) factor -> factor . POW expression
@@ -1982,12 +1993,33 @@ state 79
     NE              reduce using rule 38 (term -> term DIV factor .)
     DIS             reduce using rule 38 (term -> term DIV factor .)
     RBR             reduce using rule 38 (term -> term DIV factor .)
-    POW             shift and go to state 58
+    POW             shift and go to state 60
 
   ! POW             [ reduce using rule 38 (term -> term DIV factor .) ]
 
 
-state 80
+state 82
+
+    (44) factor -> LBR expression RBR .
+
+    POW             reduce using rule 44 (factor -> LBR expression RBR .)
+    MULT            reduce using rule 44 (factor -> LBR expression RBR .)
+    CON             reduce using rule 44 (factor -> LBR expression RBR .)
+    DIV             reduce using rule 44 (factor -> LBR expression RBR .)
+    SEMICOLON       reduce using rule 44 (factor -> LBR expression RBR .)
+    PLUS            reduce using rule 44 (factor -> LBR expression RBR .)
+    SUB             reduce using rule 44 (factor -> LBR expression RBR .)
+    MOREQ           reduce using rule 44 (factor -> LBR expression RBR .)
+    LESEQ           reduce using rule 44 (factor -> LBR expression RBR .)
+    LT              reduce using rule 44 (factor -> LBR expression RBR .)
+    GT              reduce using rule 44 (factor -> LBR expression RBR .)
+    EQ              reduce using rule 44 (factor -> LBR expression RBR .)
+    NE              reduce using rule 44 (factor -> LBR expression RBR .)
+    DIS             reduce using rule 44 (factor -> LBR expression RBR .)
+    RBR             reduce using rule 44 (factor -> LBR expression RBR .)
+
+
+state 83
 
     (43) factor -> factor POW expression .
     (23) expression -> expression . PLUS term
@@ -2015,15 +2047,15 @@ state 80
     DIV             reduce using rule 43 (factor -> factor POW expression .)
     SEMICOLON       reduce using rule 43 (factor -> factor POW expression .)
     RBR             reduce using rule 43 (factor -> factor POW expression .)
-    PLUS            shift and go to state 43
-    SUB             shift and go to state 44
-    MOREQ           shift and go to state 45
-    LESEQ           shift and go to state 46
-    LT              shift and go to state 47
-    GT              shift and go to state 48
-    EQ              shift and go to state 49
-    NE              shift and go to state 50
-    DIS             shift and go to state 51
+    PLUS            shift and go to state 47
+    SUB             shift and go to state 48
+    MOREQ           shift and go to state 49
+    LESEQ           shift and go to state 50
+    LT              shift and go to state 51
+    GT              shift and go to state 52
+    EQ              shift and go to state 53
+    NE              shift and go to state 54
+    DIS             shift and go to state 55
 
   ! PLUS            [ reduce using rule 43 (factor -> factor POW expression .) ]
   ! SUB             [ reduce using rule 43 (factor -> factor POW expression .) ]
@@ -2036,39 +2068,7 @@ state 80
   ! DIS             [ reduce using rule 43 (factor -> factor POW expression .) ]
 
 
-state 81
-
-    (44) factor -> LBR expression RBR .
-
-    POW             reduce using rule 44 (factor -> LBR expression RBR .)
-    MULT            reduce using rule 44 (factor -> LBR expression RBR .)
-    CON             reduce using rule 44 (factor -> LBR expression RBR .)
-    DIV             reduce using rule 44 (factor -> LBR expression RBR .)
-    SEMICOLON       reduce using rule 44 (factor -> LBR expression RBR .)
-    PLUS            reduce using rule 44 (factor -> LBR expression RBR .)
-    SUB             reduce using rule 44 (factor -> LBR expression RBR .)
-    MOREQ           reduce using rule 44 (factor -> LBR expression RBR .)
-    LESEQ           reduce using rule 44 (factor -> LBR expression RBR .)
-    LT              reduce using rule 44 (factor -> LBR expression RBR .)
-    GT              reduce using rule 44 (factor -> LBR expression RBR .)
-    EQ              reduce using rule 44 (factor -> LBR expression RBR .)
-    NE              reduce using rule 44 (factor -> LBR expression RBR .)
-    DIS             reduce using rule 44 (factor -> LBR expression RBR .)
-    RBR             reduce using rule 44 (factor -> LBR expression RBR .)
-
-
-state 82
-
-    (16) funcall -> ID LBR args RBR SEMICOLON .
-
-    RFBR            reduce using rule 16 (funcall -> ID LBR args RBR SEMICOLON .)
-    IF              reduce using rule 16 (funcall -> ID LBR args RBR SEMICOLON .)
-    ID              reduce using rule 16 (funcall -> ID LBR args RBR SEMICOLON .)
-    WHILE           reduce using rule 16 (funcall -> ID LBR args RBR SEMICOLON .)
-    RETURN          reduce using rule 16 (funcall -> ID LBR args RBR SEMICOLON .)
-
-
-state 83
+state 84
 
     (17) if -> IF LBR expression RBR LFBR . funcbody RFBR elsebranch
     (8) funcbody -> .
@@ -2084,9 +2084,9 @@ state 83
     WHILE           reduce using rule 8 (funcbody -> .)
     RETURN          reduce using rule 8 (funcbody -> .)
 
-    funcbody                       shift and go to state 85
+    funcbody                       shift and go to state 88
 
-state 84
+state 85
 
     (20) while -> WHILE LBR expression RBR LFBR . funcbody RFBR
     (8) funcbody -> .
@@ -2102,9 +2102,31 @@ state 84
     WHILE           reduce using rule 8 (funcbody -> .)
     RETURN          reduce using rule 8 (funcbody -> .)
 
-    funcbody                       shift and go to state 86
+    funcbody                       shift and go to state 89
 
-state 85
+state 86
+
+    (21) return -> RETURN LBR expression RBR SEMICOLON .
+
+    RFBR            reduce using rule 21 (return -> RETURN LBR expression RBR SEMICOLON .)
+    IF              reduce using rule 21 (return -> RETURN LBR expression RBR SEMICOLON .)
+    ID              reduce using rule 21 (return -> RETURN LBR expression RBR SEMICOLON .)
+    WHILE           reduce using rule 21 (return -> RETURN LBR expression RBR SEMICOLON .)
+    RETURN          reduce using rule 21 (return -> RETURN LBR expression RBR SEMICOLON .)
+
+
+state 87
+
+    (22) return -> RETURN LBR ID RBR SEMICOLON .
+
+    RFBR            reduce using rule 22 (return -> RETURN LBR ID RBR SEMICOLON .)
+    IF              reduce using rule 22 (return -> RETURN LBR ID RBR SEMICOLON .)
+    ID              reduce using rule 22 (return -> RETURN LBR ID RBR SEMICOLON .)
+    WHILE           reduce using rule 22 (return -> RETURN LBR ID RBR SEMICOLON .)
+    RETURN          reduce using rule 22 (return -> RETURN LBR ID RBR SEMICOLON .)
+
+
+state 88
 
     (17) if -> IF LBR expression RBR LFBR funcbody . RFBR elsebranch
     (9) funcbody -> funcbody . if
@@ -2117,10 +2139,10 @@ state 85
     (14) assign -> . ID ASSIGN expression SEMICOLON
     (15) assign -> . ID ASSIGN funcall
     (20) while -> . WHILE LBR expression RBR LFBR funcbody RFBR
-    (21) return -> . RETURN expression SEMICOLON
-    (22) return -> . RETURN ID SEMICOLON
+    (21) return -> . RETURN LBR expression RBR SEMICOLON
+    (22) return -> . RETURN LBR ID RBR SEMICOLON
 
-    RFBR            shift and go to state 87
+    RFBR            shift and go to state 90
     IF              shift and go to state 21
     ID              shift and go to state 14
     WHILE           shift and go to state 22
@@ -2132,7 +2154,7 @@ state 85
     while                          shift and go to state 19
     return                         shift and go to state 20
 
-state 86
+state 89
 
     (20) while -> WHILE LBR expression RBR LFBR funcbody . RFBR
     (9) funcbody -> funcbody . if
@@ -2145,10 +2167,10 @@ state 86
     (14) assign -> . ID ASSIGN expression SEMICOLON
     (15) assign -> . ID ASSIGN funcall
     (20) while -> . WHILE LBR expression RBR LFBR funcbody RFBR
-    (21) return -> . RETURN expression SEMICOLON
-    (22) return -> . RETURN ID SEMICOLON
+    (21) return -> . RETURN LBR expression RBR SEMICOLON
+    (22) return -> . RETURN LBR ID RBR SEMICOLON
 
-    RFBR            shift and go to state 88
+    RFBR            shift and go to state 91
     IF              shift and go to state 21
     ID              shift and go to state 14
     WHILE           shift and go to state 22
@@ -2160,7 +2182,7 @@ state 86
     while                          shift and go to state 19
     return                         shift and go to state 20
 
-state 87
+state 90
 
     (17) if -> IF LBR expression RBR LFBR funcbody RFBR . elsebranch
     (18) elsebranch -> .
@@ -2171,11 +2193,11 @@ state 87
     ID              reduce using rule 18 (elsebranch -> .)
     WHILE           reduce using rule 18 (elsebranch -> .)
     RETURN          reduce using rule 18 (elsebranch -> .)
-    ELSE            shift and go to state 90
+    ELSE            shift and go to state 93
 
-    elsebranch                     shift and go to state 89
+    elsebranch                     shift and go to state 92
 
-state 88
+state 91
 
     (20) while -> WHILE LBR expression RBR LFBR funcbody RFBR .
 
@@ -2186,7 +2208,7 @@ state 88
     RETURN          reduce using rule 20 (while -> WHILE LBR expression RBR LFBR funcbody RFBR .)
 
 
-state 89
+state 92
 
     (17) if -> IF LBR expression RBR LFBR funcbody RFBR elsebranch .
 
@@ -2197,14 +2219,14 @@ state 89
     RETURN          reduce using rule 17 (if -> IF LBR expression RBR LFBR funcbody RFBR elsebranch .)
 
 
-state 90
+state 93
 
     (19) elsebranch -> ELSE . LFBR funcbody RFBR
 
-    LFBR            shift and go to state 91
+    LFBR            shift and go to state 94
 
 
-state 91
+state 94
 
     (19) elsebranch -> ELSE LFBR . funcbody RFBR
     (8) funcbody -> .
@@ -2220,9 +2242,9 @@ state 91
     WHILE           reduce using rule 8 (funcbody -> .)
     RETURN          reduce using rule 8 (funcbody -> .)
 
-    funcbody                       shift and go to state 92
+    funcbody                       shift and go to state 95
 
-state 92
+state 95
 
     (19) elsebranch -> ELSE LFBR funcbody . RFBR
     (9) funcbody -> funcbody . if
@@ -2235,10 +2257,10 @@ state 92
     (14) assign -> . ID ASSIGN expression SEMICOLON
     (15) assign -> . ID ASSIGN funcall
     (20) while -> . WHILE LBR expression RBR LFBR funcbody RFBR
-    (21) return -> . RETURN expression SEMICOLON
-    (22) return -> . RETURN ID SEMICOLON
+    (21) return -> . RETURN LBR expression RBR SEMICOLON
+    (22) return -> . RETURN LBR ID RBR SEMICOLON
 
-    RFBR            shift and go to state 93
+    RFBR            shift and go to state 96
     IF              shift and go to state 21
     ID              shift and go to state 14
     WHILE           shift and go to state 22
@@ -2250,7 +2272,7 @@ state 92
     while                          shift and go to state 19
     return                         shift and go to state 20
 
-state 93
+state 96
 
     (19) elsebranch -> ELSE LFBR funcbody RFBR .
 
@@ -2263,75 +2285,45 @@ state 93
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for SEMICOLON in state 29 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 29 resolved as shift
-WARNING: shift/reduce conflict for SUB in state 29 resolved as shift
-WARNING: shift/reduce conflict for SEMICOLON in state 29 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 29 resolved as shift
-WARNING: shift/reduce conflict for SUB in state 29 resolved as shift
-WARNING: shift/reduce conflict for MULT in state 30 resolved as shift
-WARNING: shift/reduce conflict for CON in state 30 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 30 resolved as shift
-WARNING: shift/reduce conflict for POW in state 31 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 36 resolved as shift
-WARNING: shift/reduce conflict for SUB in state 36 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 36 resolved as shift
-WARNING: shift/reduce conflict for SUB in state 36 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 40 resolved as shift
-WARNING: shift/reduce conflict for SUB in state 40 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 40 resolved as shift
-WARNING: shift/reduce conflict for SUB in state 40 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 59 resolved as shift
-WARNING: shift/reduce conflict for SUB in state 59 resolved as shift
-WARNING: shift/reduce conflict for MOREQ in state 59 resolved as shift
-WARNING: shift/reduce conflict for LESEQ in state 59 resolved as shift
-WARNING: shift/reduce conflict for LT in state 59 resolved as shift
-WARNING: shift/reduce conflict for GT in state 59 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 59 resolved as shift
-WARNING: shift/reduce conflict for NE in state 59 resolved as shift
-WARNING: shift/reduce conflict for DIS in state 59 resolved as shift
-WARNING: shift/reduce conflict for MULT in state 65 resolved as shift
-WARNING: shift/reduce conflict for CON in state 65 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 65 resolved as shift
-WARNING: shift/reduce conflict for MULT in state 67 resolved as shift
-WARNING: shift/reduce conflict for CON in state 67 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 67 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 68 resolved as shift
-WARNING: shift/reduce conflict for SUB in state 68 resolved as shift
-WARNING: shift/reduce conflict for MOREQ in state 68 resolved as shift
-WARNING: shift/reduce conflict for LESEQ in state 68 resolved as shift
-WARNING: shift/reduce conflict for LT in state 68 resolved as shift
-WARNING: shift/reduce conflict for GT in state 68 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 68 resolved as shift
-WARNING: shift/reduce conflict for NE in state 68 resolved as shift
-WARNING: shift/reduce conflict for DIS in state 68 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 69 resolved as shift
-WARNING: shift/reduce conflict for SUB in state 69 resolved as shift
-WARNING: shift/reduce conflict for MOREQ in state 69 resolved as shift
-WARNING: shift/reduce conflict for LESEQ in state 69 resolved as shift
-WARNING: shift/reduce conflict for LT in state 69 resolved as shift
-WARNING: shift/reduce conflict for GT in state 69 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 69 resolved as shift
-WARNING: shift/reduce conflict for NE in state 69 resolved as shift
-WARNING: shift/reduce conflict for DIS in state 69 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 70 resolved as shift
-WARNING: shift/reduce conflict for SUB in state 70 resolved as shift
-WARNING: shift/reduce conflict for MOREQ in state 70 resolved as shift
-WARNING: shift/reduce conflict for LESEQ in state 70 resolved as shift
-WARNING: shift/reduce conflict for LT in state 70 resolved as shift
-WARNING: shift/reduce conflict for GT in state 70 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 70 resolved as shift
-WARNING: shift/reduce conflict for NE in state 70 resolved as shift
-WARNING: shift/reduce conflict for DIS in state 70 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 71 resolved as shift
-WARNING: shift/reduce conflict for SUB in state 71 resolved as shift
-WARNING: shift/reduce conflict for MOREQ in state 71 resolved as shift
-WARNING: shift/reduce conflict for LESEQ in state 71 resolved as shift
-WARNING: shift/reduce conflict for LT in state 71 resolved as shift
-WARNING: shift/reduce conflict for GT in state 71 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 71 resolved as shift
-WARNING: shift/reduce conflict for NE in state 71 resolved as shift
-WARNING: shift/reduce conflict for DIS in state 71 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 30 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 30 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 30 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 30 resolved as shift
+WARNING: shift/reduce conflict for MULT in state 33 resolved as shift
+WARNING: shift/reduce conflict for CON in state 33 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 33 resolved as shift
+WARNING: shift/reduce conflict for POW in state 35 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 39 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 39 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 39 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 39 resolved as shift
+WARNING: shift/reduce conflict for RBR in state 42 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 42 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 42 resolved as shift
+WARNING: shift/reduce conflict for RBR in state 42 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 42 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 42 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 61 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 61 resolved as shift
+WARNING: shift/reduce conflict for MOREQ in state 61 resolved as shift
+WARNING: shift/reduce conflict for LESEQ in state 61 resolved as shift
+WARNING: shift/reduce conflict for LT in state 61 resolved as shift
+WARNING: shift/reduce conflict for GT in state 61 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 61 resolved as shift
+WARNING: shift/reduce conflict for NE in state 61 resolved as shift
+WARNING: shift/reduce conflict for DIS in state 61 resolved as shift
+WARNING: shift/reduce conflict for MULT in state 68 resolved as shift
+WARNING: shift/reduce conflict for CON in state 68 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 68 resolved as shift
+WARNING: shift/reduce conflict for MULT in state 69 resolved as shift
+WARNING: shift/reduce conflict for CON in state 69 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 69 resolved as shift
+WARNING: shift/reduce conflict for MULT in state 70 resolved as shift
+WARNING: shift/reduce conflict for CON in state 70 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 70 resolved as shift
+WARNING: shift/reduce conflict for MULT in state 71 resolved as shift
+WARNING: shift/reduce conflict for CON in state 71 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 71 resolved as shift
 WARNING: shift/reduce conflict for PLUS in state 72 resolved as shift
 WARNING: shift/reduce conflict for SUB in state 72 resolved as shift
 WARNING: shift/reduce conflict for MOREQ in state 72 resolved as shift
@@ -2350,30 +2342,60 @@ WARNING: shift/reduce conflict for GT in state 73 resolved as shift
 WARNING: shift/reduce conflict for EQ in state 73 resolved as shift
 WARNING: shift/reduce conflict for NE in state 73 resolved as shift
 WARNING: shift/reduce conflict for DIS in state 73 resolved as shift
-WARNING: shift/reduce conflict for MULT in state 74 resolved as shift
-WARNING: shift/reduce conflict for CON in state 74 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 74 resolved as shift
-WARNING: shift/reduce conflict for MULT in state 75 resolved as shift
-WARNING: shift/reduce conflict for CON in state 75 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 75 resolved as shift
-WARNING: shift/reduce conflict for MULT in state 76 resolved as shift
-WARNING: shift/reduce conflict for CON in state 76 resolved as shift
-WARNING: shift/reduce conflict for DIV in state 76 resolved as shift
-WARNING: shift/reduce conflict for POW in state 77 resolved as shift
-WARNING: shift/reduce conflict for POW in state 78 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 74 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 74 resolved as shift
+WARNING: shift/reduce conflict for MOREQ in state 74 resolved as shift
+WARNING: shift/reduce conflict for LESEQ in state 74 resolved as shift
+WARNING: shift/reduce conflict for LT in state 74 resolved as shift
+WARNING: shift/reduce conflict for GT in state 74 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 74 resolved as shift
+WARNING: shift/reduce conflict for NE in state 74 resolved as shift
+WARNING: shift/reduce conflict for DIS in state 74 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 75 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 75 resolved as shift
+WARNING: shift/reduce conflict for MOREQ in state 75 resolved as shift
+WARNING: shift/reduce conflict for LESEQ in state 75 resolved as shift
+WARNING: shift/reduce conflict for LT in state 75 resolved as shift
+WARNING: shift/reduce conflict for GT in state 75 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 75 resolved as shift
+WARNING: shift/reduce conflict for NE in state 75 resolved as shift
+WARNING: shift/reduce conflict for DIS in state 75 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 76 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 76 resolved as shift
+WARNING: shift/reduce conflict for MOREQ in state 76 resolved as shift
+WARNING: shift/reduce conflict for LESEQ in state 76 resolved as shift
+WARNING: shift/reduce conflict for LT in state 76 resolved as shift
+WARNING: shift/reduce conflict for GT in state 76 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 76 resolved as shift
+WARNING: shift/reduce conflict for NE in state 76 resolved as shift
+WARNING: shift/reduce conflict for DIS in state 76 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 77 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 77 resolved as shift
+WARNING: shift/reduce conflict for MOREQ in state 77 resolved as shift
+WARNING: shift/reduce conflict for LESEQ in state 77 resolved as shift
+WARNING: shift/reduce conflict for LT in state 77 resolved as shift
+WARNING: shift/reduce conflict for GT in state 77 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 77 resolved as shift
+WARNING: shift/reduce conflict for NE in state 77 resolved as shift
+WARNING: shift/reduce conflict for DIS in state 77 resolved as shift
+WARNING: shift/reduce conflict for MULT in state 78 resolved as shift
+WARNING: shift/reduce conflict for CON in state 78 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 78 resolved as shift
 WARNING: shift/reduce conflict for POW in state 79 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 80 resolved as shift
-WARNING: shift/reduce conflict for SUB in state 80 resolved as shift
-WARNING: shift/reduce conflict for MOREQ in state 80 resolved as shift
-WARNING: shift/reduce conflict for LESEQ in state 80 resolved as shift
-WARNING: shift/reduce conflict for LT in state 80 resolved as shift
-WARNING: shift/reduce conflict for GT in state 80 resolved as shift
-WARNING: shift/reduce conflict for EQ in state 80 resolved as shift
-WARNING: shift/reduce conflict for NE in state 80 resolved as shift
-WARNING: shift/reduce conflict for DIS in state 80 resolved as shift
-WARNING: reduce/reduce conflict in state 29 resolved using rule (expression -> ID)
-WARNING: rejected rule (term -> ID) in state 29
-WARNING: reduce/reduce conflict in state 36 resolved using rule (expression -> ID)
-WARNING: rejected rule (term -> ID) in state 36
-WARNING: reduce/reduce conflict in state 40 resolved using rule (expression -> ID)
-WARNING: rejected rule (term -> ID) in state 40
+WARNING: shift/reduce conflict for POW in state 80 resolved as shift
+WARNING: shift/reduce conflict for POW in state 81 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 83 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 83 resolved as shift
+WARNING: shift/reduce conflict for MOREQ in state 83 resolved as shift
+WARNING: shift/reduce conflict for LESEQ in state 83 resolved as shift
+WARNING: shift/reduce conflict for LT in state 83 resolved as shift
+WARNING: shift/reduce conflict for GT in state 83 resolved as shift
+WARNING: shift/reduce conflict for EQ in state 83 resolved as shift
+WARNING: shift/reduce conflict for NE in state 83 resolved as shift
+WARNING: shift/reduce conflict for DIS in state 83 resolved as shift
+WARNING: reduce/reduce conflict in state 30 resolved using rule (expression -> ID)
+WARNING: rejected rule (term -> ID) in state 30
+WARNING: reduce/reduce conflict in state 39 resolved using rule (expression -> ID)
+WARNING: rejected rule (term -> ID) in state 39
+WARNING: reduce/reduce conflict in state 42 resolved using rule (expression -> ID)
+WARNING: rejected rule (term -> ID) in state 42

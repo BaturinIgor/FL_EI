@@ -1,5 +1,4 @@
 def:
-	None
 	main:
 		args:
 			argc

@@ -1,8 +1,27 @@
-def func (a, b, c) { 
-	c=2+(2+2+2+(2+2+(2+2+(2+2)*2+2)*3+5)/1+6-8)**4; 
-	if (c>=0) { 
-		return a; 
-	} else { 
-		return c; 
-	} 
+def mult () { 
+	if (c/=d) { 
+		while 1 { 
+			return a+b; 
+		}
+		return 0; 
+	}
+	if (c/=d) { 
+		while 1 { 
+			return a+b; 
+		}
+		return 0; 
+	}
+	if (c/=d) { 
+		while 1 { 
+			return a+b; 
+		}
+		return 0; 
+	}
+	if (c/=d) { 
+		while 1 { 
+			return a+b; 
+		}
+		return 0; 
+	}
+	return a; 
 }

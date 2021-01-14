@@ -1,16 +1,16 @@
-import ply.yacc as yacc
-from collections import deque
-import sys as sys
 import re
-
+import sys as sys
+from collections import deque
 from lex import tokens
 
+import ply.yacc as yacc
 
 class Node:
     def parts_str(self):
         st = []
         for part in self.parts:
-            st.append(str(part))
+            if part != None:
+                st.append(str(part))
         return "\n".join(st)
 
     def __repr__(self):
@@ -102,9 +102,9 @@ def p_while(p):
 
 
 def p_return(p):
-    '''return : RETURN expression SEMICOLON
-              | RETURN ID SEMICOLON '''
-    p[0] = Node('return', p[2])
+    '''return : RETURN LBR expression RBR SEMICOLON
+              | RETURN LBR ID RBR SEMICOLON '''
+    p[0] = Node('return', [p[3]])
 
 
 def p_expression_plus(p):
@@ -128,9 +128,11 @@ def p_expression_compar(p):
                   | expression NE expression'''
     p[0] = Node(p[2], [p[1], p[3]])
 
+
 def p_expression_bin(p):
     '''expression : expression DIS term'''
     p[0] = Node(p[2], [p[1], p[3]])
+
 
 def p_expression_term(p):
     '''expression : term
@@ -142,9 +144,11 @@ def p_term_times(p):
     'term : term MULT factor'
     p[0] = Node(p[2], [p[1], p[3]])
 
+
 def p_term_bin(p):
     'term : term CON factor'
     p[0] = Node(p[2], [p[1], p[3]])
+
 
 def p_term_div(p):
     'term : term DIV factor'
@@ -192,6 +196,7 @@ def build_tree(text):
 mass1 = []
 countTab = deque()
 resultList = []
+tabs = ''
 currentTab = 0
 assinc = False
 prettyPrint = ""
@@ -233,24 +238,25 @@ def saveTab(type, cur):
 
 def printBracket(type):
     count = counterTab(type)[0]
-    tabs = ''
+    global tabs
     global currentTab
     global assinc
     global resultList
     global prettyPrint
     if len(countTab) > 0:
         elm = countTab.pop()
-        if count <= elm[2] or (type == 'else' and elm[0] == 'if'  and count == elm[2]+1):
+        if count <= elm[2] or (type == 'else' and elm[0] == 'if' and count == elm[2] + 1):
             if type == "assign" and count == elm[2]:
                 countTab.append(elm)
                 return tabs
+            tabs = tabs if tabs == '' and elm[1] > 0 else tabs + '\n'
             for i in range(elm[1]):
-                #print(i)
                 tabs = tabs + '\t'
             tabs = tabs + '}'
-            tabs = tabs + '\n' if type != 'else' else tabs
+            tabs = tabs + '\n' if type != 'else' and type != 'return' else tabs
             currentTab = int(elm[1])
             assinc = False
+            printBracket(type)
         else:
             countTab.append(elm)
             if type == 'assign' and assinc:
@@ -267,8 +273,10 @@ def printBracket(type):
 def assign(mass):
     global currentTab
     global resultList
+    global tabs
     string = '\n'
     string = string + printBracket("assign")
+    tabs = ''
     currentTab = currentTab if string != '\n' else currentTab + 1
     string = string + printCurrentTab()
     string = string + mass[0] + "=" + expression_processing(mass[1]) + ";"
@@ -297,10 +305,13 @@ def insertType(type, parts):
     global currentTab
     global assinc
     global flag
+    global mass1
+    global tabs
     if str(type) == 'while' or type == 'WHILE':
         string = '\n'
         string = string + printBracket(type)
-        currentTab = currentTab if string == '\n' else currentTab + 1
+        tabs = ''
+        currentTab = currentTab if mass1[len(mass1) - 1] != 'funcbody' else currentTab + 1
         string = string + printCurrentTab()
         string = string + "while " + ifWhile(parts[0]) + " {"
         flag = 0
@@ -310,7 +321,8 @@ def insertType(type, parts):
     if str(type) == 'if' or str(type) == 'IF':
         string = '\n'
         string = string + printBracket(type)
-        currentTab = currentTab if string == '\n' else currentTab + 1
+        tabs = ''
+        currentTab = currentTab if mass1[len(mass1) - 1] != 'funcbody' else currentTab + 1
         string = string + printCurrentTab()
         string = string + "if " + ifWhile(parts[0]) + " {"
         flag = 0
@@ -320,6 +332,7 @@ def insertType(type, parts):
     if str(type) == 'else' or str(type) == 'ELSE':
         string = '\n'
         string = string + printBracket(type)
+        tabs = ''
         string = string + ' '
         string = string + "else {"
         saveTab(type, currentTab)
@@ -327,11 +340,22 @@ def insertType(type, parts):
     return string
 
 
-def insertReturn(node):
-    bracket = printBracket(node.type)
-    string = '\n' + printCurrentTab()
-    string = string + '\t' + 'return '  + node.parts + ";"
-    string = string + bracket
+def insertReturn(mass):
+    global flag
+    global currentTab
+    global resultList
+    global tabs
+    string = '\n'
+    string = string + printBracket("return")
+    tabs = ''
+    currentTab = currentTab if mass1[len(mass1) - 1] != 'funcbody' else currentTab + 1
+    string = string if string != '\n' else ''
+    string = string + '\n' + printCurrentTab()
+    flag = 0
+    string = string + 'return ' + expression_processing(mass[0]) + ";"
+    mass[0] = None
+    string123 = counterTab("return")[1]
+    resultList.remove(string123)
     return string
 
 
@@ -346,7 +370,7 @@ def recurs(result):
             type = argg(result.parts)
 
         if (str(result.type) == 'return' or str(result.type) == 'RETURN') and type is None:
-            type = insertReturn(result)
+            type = insertReturn(result.parts)
         if (str(result.type) == 'def' or str(result.type) == 'DEF') and type is None:
             global countTab
             global currentTab
@@ -393,6 +417,7 @@ def pretty_printing(result):
     prettyPrint = ""
     recurs(result)
     for out in mass1:
+        # print(out)
         if str(out) != 'None' and str(out) != 'args' and str(out) != 'funcbody' and str(out) != 'body':
             prettyPrint += out
             prettyPrint += ' '
@@ -420,6 +445,7 @@ def remove_brackets(term):  # удаление лишних скобок
             continue
         term = new_term
     return term
+
 
 def expression_processing(mass):
     global flag
@@ -449,7 +475,6 @@ def expression_processing(mass):
         string = string[string.index(symbol) + 1:]
     fl = 0
     result = ""
-    #print()
     for index in range(len(tabs)):
         if index == 0:
             if not symbols[index].isdigit():
@@ -497,7 +522,7 @@ if __name__ == '__main__':
 
         write_file = open('input.txt.out', 'w')
         write_file.write(str(tree))
-        
+
         write_file = open('prettyprinting.txt', 'w')
         write_file.write(pretty_printing(tree))
     else:
