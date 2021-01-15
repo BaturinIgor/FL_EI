@@ -4,7 +4,23 @@ def:
 			x
 			y
 		funcbody:
-			return:
-				*:
+			assign:
+				z
+				+:
 					x
 					y
+			if:
+				&&:
+					>:
+						a
+						b
+					<:
+						d
+						2
+				funcbody:
+					return:
+						x
+			return:
+				-:
+					z
+					t

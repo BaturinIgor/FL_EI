@@ -94,7 +94,6 @@ def p_elsebranch(p):
     if len(p) == 5:
         p[0] = Node('else', [p[3]])
 
-
 def p_while(p):
     '''while : WHILE LBR expression RBR LFBR funcbody RFBR'''
     if p[3] != 0:
@@ -160,16 +159,13 @@ def p_term_factor(p):
             | ID'''
     p[0] = p[1]
 
-
-def p_factor_bin(p):
-    'factor : DEN expression'
-    p[0] = Node(p[1], [p[2]])
-
-
 def p_factor_num(p):
     'factor : NUM'
     p[0] = p[1]
 
+def p_factor_bin(p):
+    'factor : DEN expression'
+    p[0] = Node(p[1], [p[2]])
 
 def p_factor_pow(p):
     'factor : factor POW expression'
@@ -177,8 +173,12 @@ def p_factor_pow(p):
 
 
 def p_factor_expr(p):
-    'factor : LBR expression RBR'
-    p[0] = p[2]
+    '''factor : expression
+              | LBR expression RBR'''
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = p[2]
 
 
 def p_error(p):
@@ -206,6 +206,8 @@ flag = 0;
 def ifWhile(mass):
     global flag
     flag = 1;
+    if isinstance(mass, str):
+        return "(" + mass + ")"
     return expression_processing(mass)
 
 
@@ -246,9 +248,7 @@ def printBracket(type):
     if len(countTab) > 0:
         elm = countTab.pop()
         if count <= elm[2] or (type == 'else' and elm[0] == 'if' and count == elm[2] + 1):
-            if type == "assign" and count == elm[2]:
-                countTab.append(elm)
-                return tabs
+            
             tabs = tabs if tabs == '' and elm[1] > 0 else tabs + '\n'
             for i in range(elm[1]):
                 tabs = tabs + '\t'
@@ -446,7 +446,6 @@ def remove_brackets(term):  # удаление лишних скобок
         term = new_term
     return term
 
-
 def expression_processing(mass):
     global flag
     string = str(mass)
@@ -457,7 +456,7 @@ def expression_processing(mass):
     symbols = []
     operations = deque()
     variables = deque()
-    number = 1;
+    number = 2;
     while string.count('\n') >= 2:
         match = re.search(r'\n(.*)\n', string)
 
@@ -474,6 +473,7 @@ def expression_processing(mass):
             symbols.append(symbol)
         string = string[string.index(symbol) + 1:]
     fl = 0
+    brackets = 0
     result = ""
     for index in range(len(tabs)):
         if index == 0:
@@ -485,17 +485,21 @@ def expression_processing(mass):
         if not symbols[index].isdigit():
             if (int(tabs[index - 1]) - int(tabs[index])) > 1 and index != len(tabs) - 1 and index != 0:
                 result += ")" * (int(tabs[index - 1]) - int(tabs[index]) - 1)
+                brackets -= (int(tabs[index - 1]) - int(tabs[index]) - 1)
             if fl == 0:
                 result += "("
+                brackets += 1
                 operations.append(symbols[index])
             else:
                 result += operations.pop()
                 operations.append(symbols[index])
                 result += "("
+                brackets += 1
                 fl = 0
         else:
             if (int(tabs[index - 1]) - int(tabs[index])) > 1 and index != len(tabs) - 1 and index != 0:
                 result += ")" * (int(tabs[index - 1]) - int(tabs[index]) - 1)
+                brackets -= (int(tabs[index - 1]) - int(tabs[index]) - 1)
             if fl == 0:
                 result += symbols[index]
                 fl = 1
@@ -503,13 +507,22 @@ def expression_processing(mass):
                 result += operations.pop()
                 result += symbols[index]
                 result += ")"
-        if index == len(tabs) - 1:
+                brackets -= 1
+        print(index)
+        if index == len(tabs) - 1 and index != 0:
             result += ")" * (int(tabs[index]) - int(tabs[0]) - 1)
+            brackets -= (int(tabs[index]) - int(tabs[0]) - 1)
+    while brackets > 0:
+        result += ")"
+        brackets -= 1
     if flag == 0:
         expression = remove_brackets(result)
     else:
         expression = result
-    for index in range(number - 1, 0, -1):
+    print(expression)
+    print(variables)
+    for index in range(number - 1, 1, -1):
+        print(index)
         expression = expression.replace(str(index), variables.pop(), 1)
     return expression
 

@@ -1,3 +1,7 @@
 def mult(x,y) {
-
-return (x*(y));}
+z = x+y;
+if (a > b && d < 2) {
+    return (x);
+}
+return (z-t);
+}
