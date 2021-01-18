@@ -1,5 +1,27 @@
-def mult (x, y) { 
-	z=x+y; 
-	t=x*y; 
-	return z-t; 
+def mult () { 
+	if (c/=d) { 
+		while (d>0) { 
+			return a+b; 
+		}
+		return 0; 
+	}
+	if (c/=d) { 
+		while (1) { 
+			return a+b; 
+		}
+		return 0; 
+	}
+	if (c/=d) { 
+		while (1) { 
+			return a+b; 
+		}
+		return 0; 
+	}
+	if (c/=d) { 
+		while (1) { 
+			return a+b; 
+		}
+		return 0; 
+	}
+	return a; 
 }

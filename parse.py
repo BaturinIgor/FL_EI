@@ -210,8 +210,9 @@ flag = 0;
 def ifWhile(mass):
     global flag
     flag = 1;
-    if isinstance(mass, str):
-        return "(" + mass + ")"
+    print(mass)
+    if len(str(mass)) == 1:
+        return "(" + str(mass) + ")"
     return expression_processing(mass)
 
 
