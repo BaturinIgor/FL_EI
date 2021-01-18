@@ -1,0 +1,16 @@
+def:
+	pairwiseComparable:
+		args:
+			x
+			y
+			z
+			t
+		funcbody:
+			return:
+				==:
+					==:
+						x
+						y
+					==:
+						z
+						t

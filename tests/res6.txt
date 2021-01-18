@@ -1,0 +1,9 @@
+def:
+	f:
+		args:
+			x
+			y
+		funcbody:
+			call func g:
+				args:
+					x

@@ -1,0 +1,10 @@
+def:
+	mult:
+		args:
+			x
+			y
+		funcbody:
+			return:
+				*:
+					x
+					y

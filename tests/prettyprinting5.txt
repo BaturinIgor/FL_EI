@@ -1,5 +1,4 @@
 def mult (x, y) { 
 	z=x+y; 
-	t=x*y; 
-	return z-t; 
+	return z; 
 }

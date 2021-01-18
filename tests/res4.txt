@@ -73,13 +73,13 @@ def:
 									1
 					assign:
 						d
-						+:
-							a
+						-:
 							+:
-								b
-								-:
-									c
-									d
+								+:
+									a
+									b
+								c
+							d
 					assign:
 						e
 						/:
@@ -114,11 +114,11 @@ def:
 							assign:
 								y
 								+:
-									a
 									+:
-										b
 										+:
-											c
 											+:
-												d
-												e
+												a
+												b
+											c
+										d
+									e

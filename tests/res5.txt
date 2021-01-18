@@ -9,12 +9,5 @@ def:
 				+:
 					x
 					y
-			assign:
-				t
-				*:
-					x
-					y
 			return:
-				-:
-					z
-					t
+				z

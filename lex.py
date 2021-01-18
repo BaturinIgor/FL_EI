@@ -61,12 +61,12 @@ t_DIV = r'/'
 t_DIS = r'\|\|'  # ||
 t_CON = r'\&\&'
 t_DEN = r'\--'  # --
-t_LESEQ = r'(\<=)'  # <=
-t_MOREQ = r'(\>=)'  # >=
-t_LT = r'(\<)' # <
-t_GT = r'(\>)' # >
-t_EQ = r'(==)' # ==
-t_NE = r'(/=)' # /=
+t_LESEQ = r'\<='  # <=
+t_MOREQ = r'\>='  # >=
+t_LT = r'\<' # <
+t_GT = r'\>' # >
+t_EQ = r'==' # ==
+t_NE = r'/=' # /=
 t_ASSIGN = r'='
 t_SEMICOLON = r';'
 t_COMMA = r','
@@ -88,4 +88,3 @@ while True:
     tok = lexer.token()
     if not tok:
         break
-    print(tok)

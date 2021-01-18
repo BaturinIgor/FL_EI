@@ -5,6 +5,7 @@ from lex import tokens
 
 import ply.yacc as yacc
 
+
 class Node:
     def parts_str(self):
         st = []
@@ -46,8 +47,8 @@ def p_func(p):
 
 def p_args(p):
     '''args :
-            | ID
-            | args COMMA ID'''
+            | expression
+            | args COMMA expression'''
     if len(p) == 1:
         p[0] = Node('args', [])
     elif len(p) == 2:
@@ -70,16 +71,17 @@ def p_funcbody(p):
 
 
 def p_assign(p):
-    '''assign : ID ASSIGN expression SEMICOLON
-              | ID ASSIGN funcall'''
+    '''assign : ID ASSIGN expression SEMICOLON'''
     p[0] = Node('assign', [p[1], p[3]])
 
 
 def p_funcall(p):
-    '''funcall : ID LBR args RBR SEMICOLON
-               | ID LBR args RBR'''
+    '''funcall : ID LBR args RBR SEMICOLON'''
     p[0] = Node('call func ' + p[1], [p[3]])
 
+def p_funcvar(p):
+    '''funcvar : ID LBR args RBR'''
+    p[0] = Node('variable func ' + p[1], [p[3]])
 
 def p_if(p):
     '''if : IF LBR expression RBR LFBR funcbody RFBR elsebranch'''
@@ -95,6 +97,7 @@ def p_elsebranch(p):
     if len(p) == 5:
         p[0] = Node('else', [p[3]])
 
+
 def p_while(p):
     '''while : WHILE LBR expression RBR LFBR funcbody RFBR'''
     if p[3] != 0:
@@ -108,15 +111,12 @@ def p_return(p):
 
 
 def p_expression_plus(p):
-    '''expression : expression PLUS term
-                  | ID PLUS term
-                  | funcall PLUS term'''
+    '''expression : expression PLUS term'''
     p[0] = Node(p[2], [p[1], p[3]])
 
 
 def p_expression_sub(p):
-    '''expression : expression SUB term
-                  | ID SUB term'''
+    '''expression : expression SUB term'''
     p[0] = Node(p[2], [p[1], p[3]])
 
 
@@ -136,9 +136,7 @@ def p_expression_bin(p):
 
 
 def p_expression_term(p):
-    '''expression : term
-                  | ID
-                  | funcall'''
+    '''expression : term'''
     p[0] = p[1]
 
 
@@ -158,18 +156,21 @@ def p_term_div(p):
 
 
 def p_term_factor(p):
-    '''term : factor
-            | ID
-            | funcall'''
+    '''term : factor'''
     p[0] = p[1]
 
+
 def p_factor_num(p):
-    'factor : NUM'
+    '''factor : NUM
+              | funcvar
+              | ID'''
     p[0] = p[1]
+
 
 def p_factor_bin(p):
     'factor : DEN expression'
     p[0] = Node(p[1], [p[2]])
+
 
 def p_factor_pow(p):
     'factor : factor POW expression'
@@ -177,8 +178,7 @@ def p_factor_pow(p):
 
 
 def p_factor_expr(p):
-    '''factor : expression
-              | LBR expression RBR'''
+    '''factor : LBR expression RBR'''
     if len(p) == 2:
         p[0] = p[1]
     else:
@@ -252,7 +252,7 @@ def printBracket(type):
     if len(countTab) > 0:
         elm = countTab.pop()
         if count <= elm[2] or (type == 'else' and elm[0] == 'if' and count == elm[2] + 1):
-            
+
             tabs = tabs if tabs == '' and elm[1] > 0 else tabs + '\n'
             for i in range(elm[1]):
                 tabs = tabs + '\t'
@@ -302,6 +302,14 @@ def argg(mass):
     mass = None
 
     return ''.join(string)
+
+
+def callFunc(mass):
+    string = mass.type.split()[2]
+    string = string + argg(mass.parts[0].parts)
+    mass.parts[0] = None
+    string = string[:-2]
+    return string
 
 
 def insertType(type, parts):
@@ -362,8 +370,32 @@ def insertReturn(mass):
     resultList.remove(string123)
     return string
 
+def func(result):
+    #print(result)
+    string = None
+    global countTab
+    global currentTab
+    global assinc
+    global flag
+    global mass1
+    global tabs
+    string = '\n'
+    string = string + printBracket(result.type)
+    tabs = ''
+    currentTab = currentTab if mass1[len(mass1) - 1] != 'funcbody' else currentTab + 1
+    string = string + printCurrentTab()
+    string = string + callFunc(result) + ";"
+    flag = 0
+    count, string123 = counterTab(result.type)
+    resultList.remove(string123)
+    assinc = False
+    return string
+
 
 def recurs(result):
+    global countTab
+    global currentTab
+    global assinc
     if result.parts is not None and result.type is not None:
         res = insertType(result.type, result.parts)
         type = None if res is None else res
@@ -373,12 +405,12 @@ def recurs(result):
         if (str(result.type) == 'args' or str(result.type) == 'ARGS') and type is None:
             type = argg(result.parts)
 
+        if ('call func' in str(result.type) or 'variable func' in str(result.type)) and type is None:
+            type = func(result)
+
         if (str(result.type) == 'return' or str(result.type) == 'RETURN') and type is None:
             type = insertReturn(result.parts)
         if (str(result.type) == 'def' or str(result.type) == 'DEF') and type is None:
-            global countTab
-            global currentTab
-            global assinc
             endProg()
             currentTab = 0
             assinc = False
@@ -421,7 +453,6 @@ def pretty_printing(result):
     prettyPrint = ""
     recurs(result)
     for out in mass1:
-        # print(out)
         if str(out) != 'None' and str(out) != 'args' and str(out) != 'funcbody' and str(out) != 'body':
             prettyPrint += out
             prettyPrint += ' '
@@ -450,6 +481,7 @@ def remove_brackets(term):  # удаление лишних скобок
         term = new_term
     return term
 
+
 def expression_processing(mass):
     global flag
     string = str(mass)
@@ -460,26 +492,57 @@ def expression_processing(mass):
     symbols = []
     operations = deque()
     variables = deque()
-    number = 2;
+    number = 2
+    functionTabs = 0
+    func = ""
+    fl = 0
     while string.count('\n') >= 2:
         match = re.search(r'\n(.*)\n', string)
-
         count = len(match.group(1)) - len(match.group(1).replace("\t", ""))
         symbol = match.group(1).replace("\t", "")
         if symbol.find(':') != -1:
             symbol = symbol.replace(":", "")
-        tabs.append(str(count))
-        if symbol.isalnum():
+        if (count - functionTabs) != 2 and fl and not "args" in str(match):
+            fl = 0;
+            if "," in func:
+                func = func[:-2]
+            func += ")"
             symbols.append(str(number))
-            variables.append(symbol)
+            variables.append(func)
             number += 1
-        else:
-            symbols.append(symbol)
+        if "args" in str(match):
+            fl = 1
+        if (count - functionTabs) == 2 and fl == 1:
+            func += symbol
+            func += ", "
+        tabs.append(str(count))
+        if "call func" in str(match):
+            functionTabs = count
+            func = symbol.replace("call func ", "")
+            func += "("
+        if "variable func" in str(match):
+            functionTabs = count
+            func = symbol.replace("variable func ", "")
+            func += "("
+        if not fl and not "call func" in str(match) and not "variable func" in str(match):
+            if symbol.isalnum():
+                symbols.append(str(number))
+                variables.append(symbol)
+                number += 1
+            else:
+                symbols.append(symbol)
         string = string[string.index(symbol) + 1:]
+    if len(func) >=2:
+        if func[-2] == ",":
+            func = func[:-2]
+            func += ")"
+            symbols.append(str(number))
+            variables.append(func)
+            number += 1
     fl = 0
     brackets = 0
     result = ""
-    for index in range(len(tabs)):
+    for index in range(len(symbols)):
         if index == 0:
             if not symbols[index].isdigit():
                 tabs[index] = str(int(tabs[index + 1]) - 1)
@@ -512,7 +575,6 @@ def expression_processing(mass):
                 result += symbols[index]
                 result += ")"
                 brackets -= 1
-        print(index)
         if index == len(tabs) - 1 and index != 0:
             result += ")" * (int(tabs[index]) - int(tabs[0]) - 1)
             brackets -= (int(tabs[index]) - int(tabs[0]) - 1)
@@ -523,10 +585,7 @@ def expression_processing(mass):
         expression = remove_brackets(result)
     else:
         expression = result
-    print(expression)
-    print(variables)
     for index in range(number - 1, 1, -1):
-        print(index)
         expression = expression.replace(str(index), variables.pop(), 1)
     return expression
 

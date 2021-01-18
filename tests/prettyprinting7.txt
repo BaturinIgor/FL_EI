@@ -1,0 +1,3 @@
+def pairwiseComparable (x, y, z, t) { 
+	return (x==y)==(z==t); 
+}

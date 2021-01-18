@@ -1,0 +1,12 @@
+def:
+	f:
+		args:
+			x
+			y
+		funcbody:
+			return:
+				+:
+					variable func g:
+						args:
+							x
+					1
