@@ -76,7 +76,8 @@ def p_assign(p):
 
 
 def p_funcall(p):
-    '''funcall : ID LBR args RBR SEMICOLON'''
+    '''funcall : ID LBR args RBR SEMICOLON
+               | ID LBR args RBR'''
     p[0] = Node('call func ' + p[1], [p[3]])
 
 
@@ -108,7 +109,8 @@ def p_return(p):
 
 def p_expression_plus(p):
     '''expression : expression PLUS term
-                  | ID PLUS term'''
+                  | ID PLUS term
+                  | funcall PLUS term'''
     p[0] = Node(p[2], [p[1], p[3]])
 
 
@@ -135,7 +137,8 @@ def p_expression_bin(p):
 
 def p_expression_term(p):
     '''expression : term
-                  | ID'''
+                  | ID
+                  | funcall'''
     p[0] = p[1]
 
 
@@ -156,7 +159,8 @@ def p_term_div(p):
 
 def p_term_factor(p):
     '''term : factor
-            | ID'''
+            | ID
+            | funcall'''
     p[0] = p[1]
 
 def p_factor_num(p):

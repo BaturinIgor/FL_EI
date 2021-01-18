@@ -1,7 +1,2 @@
-def mult (x, y) { 
-	z=x+y; 
-	if ((a>b)&&(d<2)) { 
-		return x; 
-	}
-	return z-t; 
+def f (x, y) { call func g (x) { 
 }

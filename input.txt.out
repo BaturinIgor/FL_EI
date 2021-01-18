@@ -1,26 +1,9 @@
 def:
-	mult:
+	f:
 		args:
 			x
 			y
 		funcbody:
-			assign:
-				z
-				+:
+			call func g:
+				args:
 					x
-					y
-			if:
-				&&:
-					>:
-						a
-						b
-					<:
-						d
-						2
-				funcbody:
-					return:
-						x
-			return:
-				-:
-					z
-					t

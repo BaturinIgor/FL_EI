@@ -38,7 +38,7 @@ tokens = [
 
 
 def t_ID(t):
-    r'[a-z_][a-z_0-9]*'
+    r'[a-z_][a-zA-Z_0-9]*'
     t.type = reserved.get(t.value, 'ID')
     return t
 
