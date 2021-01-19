@@ -1,10 +1,12 @@
 def:
-	main:
+	f:
 		args:
-			
+			x
+			y
 		funcbody:
 			return:
-				--:
-					&&:
-						x
-						y
+				variable func g:
+					args:
+						+:
+							x
+							y

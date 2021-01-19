@@ -164,5 +164,37 @@ class Tests1(unittest.TestCase):
         read_file.close()
         self.assertEqual(pretty_print, answer)
 
+    def test11(self):
+        read_file = open('tests/test11.txt', 'r')
+        text = read_file.read()
+        read_file.close()
+        result = outputing_tests(text)
+        read_file = open('tests/res11.txt', 'r')
+        answer = read_file.read()
+        read_file.close()
+        self.assertEqual(str(result), answer)
+
+        pretty_print = pretty_printing(result)
+        read_file = open('tests/prettyprinting11.txt', 'r')
+        answer = read_file.read()
+        read_file.close()
+        self.assertEqual(pretty_print, answer)
+
+    def test12(self):
+        read_file = open('tests/test12.txt', 'r')
+        text = read_file.read()
+        read_file.close()
+        result = outputing_tests(text)
+        read_file = open('tests/res12.txt', 'r')
+        answer = read_file.read()
+        read_file.close()
+        self.assertEqual(str(result), answer)
+
+        pretty_print = pretty_printing(result)
+        read_file = open('tests/prettyprinting12.txt', 'r')
+        answer = read_file.read()
+        read_file.close()
+        self.assertEqual(pretty_print, answer)
+
 if __name__ == '__main__':
     unittest.main()

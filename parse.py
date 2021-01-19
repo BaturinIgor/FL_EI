@@ -210,7 +210,6 @@ flag = 0;
 def ifWhile(mass):
     global flag
     flag = 1;
-    print(mass)
     if len(str(mass)) == 1:
         return "(" + str(mass) + ")"
     return expression_processing(mass)
@@ -294,8 +293,9 @@ def assign(mass):
 
 def argg(mass):
     string = ["("]
+
     for arg in mass:
-        string.append(arg)
+        string.append(expression_processing(arg))
         string.append(', ')
     if len(string) > 1:
         string.pop()
@@ -372,7 +372,6 @@ def insertReturn(mass):
     return string
 
 def func(result):
-    #print(result)
     string = None
     global countTab
     global currentTab
@@ -609,14 +608,10 @@ def expression_processing(mass):
         expression = remove_brackets(result)
     else:
         expression = result
-    print("LEN-----")
-    print(symbols)
-    print(tmpOper)
     while 1:
         if len(tmpOper) == 0:
             break
         expression = expression.replace(tmpOper.pop(0), symbols.pop(0), 1)
-        print(len(symbols))
     for index in range(number - 1, 1, -1):
         tmp = variables.pop()
         if tmp == "--":
@@ -630,14 +625,15 @@ def expression_processing(mass):
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:
-        read_file = open(sys.argv[1], 'r')
+        f = sys.argv[1]
+        read_file = open(f, 'r')
         text = read_file.read()
         tree = outputing(text)
 
-        write_file = open('input.txt.out', 'w')
+        write_file = open(f + '.out', 'w')
         write_file.write(str(tree))
 
-        write_file = open('prettyprinting.txt', 'w')
+        write_file = open(f + '.pp', 'w')
         write_file.write(pretty_printing(tree))
     else:
         print("No input file")
