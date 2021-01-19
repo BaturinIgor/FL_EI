@@ -493,6 +493,8 @@ def expression_processing(mass):
     symbols = []
     operations = deque()
     variables = deque()
+    oper = deque()
+    tmpOper = []
     number = 2
     functionTabs = 0
     func = ""
@@ -509,6 +511,7 @@ def expression_processing(mass):
                 func = func[:-2]
             func += ")"
             symbols.append(str(number))
+            tmpOper.append(str(number))
             variables.append(func)
             number += 1
         if "args" in str(match):
@@ -528,16 +531,29 @@ def expression_processing(mass):
         if not fl and not "call func" in str(match) and not "variable func" in str(match):
             if symbol.isalnum():
                 symbols.append(str(number))
+                tmpOper.append(str(number))
                 variables.append(symbol)
                 number += 1
             else:
-                symbols.append(symbol)
+                if symbol == "&&":
+                    symbols.append('*')
+                    tmpOper.append('*')
+                    oper.append('&&')
+                elif symbol == "||":
+                    symbols.append('+')
+                    tmpOper.append('+')
+                    oper.append('||')
+                else:
+                    symbols.append(symbol)
+                    tmpOper.append(symbol)
+                    oper.append(symbol)
         string = string[string.index(symbol) + 1:]
     if len(func) >=2:
         if func[-2] == ",":
             func = func[:-2]
             func += ")"
             symbols.append(str(number))
+            tmpOper.append(str(number))
             variables.append(func)
             number += 1
     fl = 0
@@ -556,12 +572,16 @@ def expression_processing(mass):
                 brackets -= (int(tabs[index - 1]) - int(tabs[index]) - 1)
             if fl == 0:
                 result += "("
+                if symbols[index] == '--':
+                    result += '--'
                 brackets += 1
                 operations.append(symbols[index])
             else:
                 result += operations.pop()
                 operations.append(symbols[index])
                 result += "("
+                if symbols[index] == '--':
+                    result += '--'
                 brackets += 1
                 fl = 0
         else:
@@ -582,12 +602,29 @@ def expression_processing(mass):
     while brackets > 0:
         result += ")"
         brackets -= 1
+    for index in range(len(symbols)):
+        if not symbols[index].isalnum():
+            symbols[index] = oper.popleft()
     if flag == 0:
         expression = remove_brackets(result)
     else:
         expression = result
+    print("LEN-----")
+    print(symbols)
+    print(tmpOper)
+    while 1:
+        if len(tmpOper) == 0:
+            break
+        expression = expression.replace(tmpOper.pop(0), symbols.pop(0), 1)
+        print(len(symbols))
     for index in range(number - 1, 1, -1):
-        expression = expression.replace(str(index), variables.pop(), 1)
+        tmp = variables.pop()
+        if tmp == "--":
+            expression = tmp + expression
+        else:
+            expression = expression.replace(str(index), tmp, 1)
+    if variables:
+        expression = variables.pop() + expression
     return expression
 
 

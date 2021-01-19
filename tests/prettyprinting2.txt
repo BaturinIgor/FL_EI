@@ -1,24 +1,24 @@
 def mult () { 
 	if (c/=d) { 
-		while 1 { 
+		while (1) { 
 			return a+b; 
 		}
 		return 0; 
 	}
 	if (c/=d) { 
-		while 1 { 
+		while (1) { 
 			return a+b; 
 		}
 		return 0; 
 	}
 	if (c/=d) { 
-		while 1 { 
+		while (1) { 
 			return a+b; 
 		}
 		return 0; 
 	}
 	if (c/=d) { 
-		while 1 { 
+		while (1) { 
 			return a+b; 
 		}
 		return 0; 
