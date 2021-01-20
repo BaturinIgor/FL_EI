@@ -12,7 +12,6 @@ class Node:
         for part in self.parts:
             if part != None:
                 st.append(str(part))
-        print(st)
         return "\n".join(st)
 
     def __repr__(self):
@@ -435,14 +434,8 @@ def endProg():
         prettyPrint += ' '
 
 
+
 def outputing(text):
-    result = build_tree(text)
-    write_file = open('input.txt.out', 'w')
-    write_file.write(str(result))
-    return result
-
-
-def outputing_tests(text):
     return build_tree(text)
 
 
