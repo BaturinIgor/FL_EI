@@ -7,6 +7,15 @@ def:
 			return:
 				variable func g:
 					args:
+						x
+			if:
+				>:
+					a
+					b
+				funcbody:
+					return:
 						+:
-							x
-							y
+							a
+							*:
+								3
+								5

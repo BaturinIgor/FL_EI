@@ -12,6 +12,7 @@ class Node:
         for part in self.parts:
             if part != None:
                 st.append(str(part))
+        print(st)
         return "\n".join(st)
 
     def __repr__(self):
@@ -105,9 +106,9 @@ def p_while(p):
 
 
 def p_return(p):
-    '''return : RETURN LBR expression RBR SEMICOLON
-              | RETURN LBR ID RBR SEMICOLON '''
-    p[0] = Node('return', [p[3]])
+    '''return : RETURN expression SEMICOLON
+              | RETURN ID SEMICOLON '''
+    p[0] = Node('return', [p[2]])
 
 
 def p_expression_plus(p):
